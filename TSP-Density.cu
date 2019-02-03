@@ -2,16 +2,17 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "./dataio.h"
-#include "./rendering.h"
-#include "./drawing.h"
-#include "./density.h"
+#include "./headers/dataio.h"
+#include "./headers/rendering.h"
+#include "./headers/drawing.h"
+#include "./headers/density.cuh"
 
 #define DIM 1024
-
-int numberOfNodes = getNumberOfLines("data.txt");
+#define FP "./datasets/att48/coords.txt"
+int numberOfNodes = getNumberOfLines(FP);
 float2 *nodes = (float2*)malloc((numberOfNodes)*sizeof(float2));
 float4 boundingBox;
+float2 geometricCenter;
 
 int mouse_x, mouse_y;
 
@@ -59,7 +60,6 @@ float2 getGeometricCenter(float2 *nodes, int n)
 	geometricCenter.y /= (float)n;
 
 	return(geometricCenter);
-	
 }
 
 float4 getBoundingBox(float2 *nodes, int n)
@@ -76,9 +76,12 @@ void display()
     glClear(GL_COLOR_BUFFER_BIT);
     int b = 8;
     float scale = 0.755;
+    float colorNodes[3] = {1.0, 0.1, 0.1};
+    float colorCenter[3] = {0.0, 1.0, 0.2};
     drawDensity(nodes, numberOfNodes, b, scale);
-    drawPoints(nodes, numberOfNodes, 2.5);
+    drawPoints(nodes, numberOfNodes, 2.5, colorNodes);
     drawGrid(2*scale/b, 2*scale/b, scale);
+    drawPoint(geometricCenter, 2.5, colorCenter);
 }
 
 void mouseMotion(int mx, int my)
@@ -90,7 +93,7 @@ void mouseMotion(int mx, int my)
 
 int main(int argc, char** argv)
 {
-    loadNodesFromFile("data.txt", nodes);    
+    loadNodesFromFile(FP, nodes);    
     printf("🗹  Loaded node positions\n");
 
     boundingBox = getBoundingBox(nodes, numberOfNodes);
@@ -99,9 +102,15 @@ int main(int argc, char** argv)
     float dx = boundingBox.z - boundingBox.x;
     float dy = boundingBox.w - boundingBox.y;
 
-    linearTransformPoints(nodes, nodes, numberOfNodes, -0.5, 0.75, dx, dy);
+    linearTransformPoints(nodes, numberOfNodes, -0.5, 0.75, dx, dy);
     printf("🗹  Transformed node positions\n");
 
+    geometricCenter = getGeometricCenter(nodes, numberOfNodes);
+    printf("🗹  Got geometric center\n");
+    
+    /*linearShiftPoints(nodes, numberOfNodes, geometricCenter.x, geometricCenter.y);
+    geometricCenter = getGeometricCenter(nodes, numberOfNodes);
+    printf("🗹  Aligned geometric center to origin\n");*/
     
 	glutInit(&argc,argv);
 	glutInitWindowSize(DIM,DIM);
@@ -115,5 +124,6 @@ int main(int argc, char** argv)
     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
     glEnable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
-	glutMainLoop();
+    glutMainLoop();
+    free(nodes);
 }

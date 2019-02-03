@@ -64,9 +64,12 @@ void drawDensity(float2* nodes, int numberOfNodes, int bins, float scale)
             float xr[2] = {range[i%b], range[i%b+1]};
             float yr[2] = {range[b-1-i/b], range[b-1-i/b+1]};
 
-            drawRect(make_float2(xr[0], yr[0]), make_float2(xr[1]-xr[0], yr[1]-yr[0]), (numberOfNodes/1000 + 1)*((float)filled_cpu[i])/sqrtf(numberOfNodes));
+            drawRect(make_float2(xr[0], yr[0]), make_float2(xr[1]-xr[0], yr[1]-yr[0]), 2.0*(numberOfNodes/1000 + 1)*((float)filled_cpu[i])/sqrtf(numberOfNodes));
         }
     }
+
+    free(filled_cpu); free(range);
+    cudaFree(filled); cudaFree(range_GPU);
 }
 
 #endif

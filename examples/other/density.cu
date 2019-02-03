@@ -1,13 +1,12 @@
 //nvcc SeayJohnnyHW5.cu -o SeayJohnnyHW5 -lglut -lGL -lm
-
 #include <GL/glut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <sys/time.h>
-#include "./arrays.h"
-#include "./drawing.h"
-#include "./density.h"
+#include "../../headers/arrays.h"
+#include "../../headers/drawing.h"
+#include "../../headers/density.cuh"
 
 #define DIM 1024
 #define NODES 5000
@@ -30,7 +29,7 @@ void display()
 
     int b = 32;
     drawDensity(nodes, NODES, b, 1.0);
-    drawPoints(nodes, NODES, 5.0);
+    drawPoints(nodes, NODES, 5.0, NULL);
     drawGrid(2.0/b, 2.0/b, 1.0);
     glFlush();
 }

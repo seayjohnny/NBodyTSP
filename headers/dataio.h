@@ -19,7 +19,7 @@ int getNumberOfLines(const char filename[MAX_FILE_NAME])
 }
 
 void loadNodesFromFile(const char filename[MAX_FILE_NAME], float2 *nodes)
-{    
+{   
     FILE *fp = fopen(filename, "r");
     
     int i = 0;

@@ -16,10 +16,19 @@ void drawText(float x, float y, char *string)
     glFlush();
 }
 
-void drawPoints(float2 *points, int n, float size)
+void drawPoint(float2 point, float size, float color[3])
 {
-    
-    glPointSize(size+5.0);
+    glPointSize(size+10);
+    (color==NULL) ? glColor3f(1.0, 1.0, 1.0):glColor3f(color[0], color[1], color[2]);
+    glBegin(GL_POINTS);
+    glVertex2f(point.x,point.y);
+    glEnd();
+    glFlush();
+}
+
+void drawPoints(float2 *points, int n, float size, float color[3])
+{
+    glPointSize(size+2.5);
 	glColor3f(0.0, 0.0, 0.0);
 	for(int i = 0; i < n; i++)
 	{
@@ -29,13 +38,14 @@ void drawPoints(float2 *points, int n, float size)
     }
 
     glPointSize(size);
-	glColor3f(1.0, 0.2, 0.2);
+    (color==NULL) ? glColor3f(1.0, 1.0, 1.0):glColor3f(color[0], color[1], color[2]);
 	for(int i = 0; i < n; i++)
 	{
 		glBegin(GL_POINTS);
 		glVertex2f(points[i].x,points[i].y);
 		glEnd();
     }
+    glFlush();
 
 }
 
@@ -71,7 +81,7 @@ void drawGrid(float dx, float dy, float scale)
 
 void drawRect(float2 pos, float2 dim, float scale)
 {
-    glColor3f(scale, scale, 1.5*scale);
+    glColor3f(0.31*scale, 0.176*scale, 0.5*scale);
     glBegin(GL_POLYGON);
     glVertex2f(pos.x, pos.y);
     glVertex2f(pos.x+dim.x, pos.y);
