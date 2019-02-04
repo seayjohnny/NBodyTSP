@@ -74,7 +74,7 @@ float4 getBoundingBox(float2 *nodes, int n)
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    int b = 8;
+    int b = 4;
     float scale = 0.755;
     float colorNodes[3] = {1.0, 0.1, 0.1};
     float colorCenter[3] = {0.0, 1.0, 0.2};

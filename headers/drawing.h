@@ -2,7 +2,7 @@
 #define DRAWINGH
 
 #include <GL/glut.h>
-
+#include <math.h>
 
 void drawText(float x, float y, char *string)
 {
@@ -87,6 +87,22 @@ void drawRect(float2 pos, float2 dim, float scale)
     glVertex2f(pos.x+dim.x, pos.y);
     glVertex2f(pos.x+dim.x, pos.y+dim.y);
     glVertex2f(pos.x, pos.y+dim.y);
+    glEnd();
+    glFlush();
+}
+
+void drawCircle(float2 center, float radius, int segments, float thickness, float color[3])
+{
+    double pi = 3.14159265358979323846;
+
+    (color==NULL) ? glColor3f(1.0, 1.0, 1.0):glColor3f(color[0], color[1], color[2]);
+    glLineWidth(thickness);
+    glBegin(GL_LINE_LOOP);
+    for(int i = 0; i <= segments; i++)
+    {
+        float theta = i*2.0*pi/segments;
+        glVertex2f(radius*cos(theta), radius*sin(theta));
+    }
     glEnd();
     glFlush();
 }

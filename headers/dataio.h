@@ -35,4 +35,22 @@ void loadNodesFromFile(const char filename[MAX_FILE_NAME], float2 *nodes)
     fclose(fp);
 }
 
+void loadOptimalPath(const char filename[MAX_FILE_NAME], int *path, int n)
+{
+    FILE *fp = fopen(filename, "r");
+    
+    int i = 0;
+    while(i < n)
+    {
+        fscanf(fp,"%d", &path[i]);
+        path[i]--;
+        i += 1;
+        if(feof(fp))
+        {
+            break;
+        }
+    }
+    fclose(fp);
+}
+
 #endif

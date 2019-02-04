@@ -7,12 +7,12 @@
 #include "../../headers/arrays.h"
 #include "../../headers/drawing.h"
 #include "../../headers/density.cuh"
-#include "../../headers/rendering.h"
 
 #define DIM 1024
-#define NODES 50
+#define NODES 20
 
 float2 *nodes = (float2*)malloc((NODES)*sizeof(float2));
+__constant__ float2 c_nodes[NODES];
 
 float *pixels;
 float *buffer;
@@ -23,15 +23,16 @@ float rnd(float x)
 {
     return(x*rand() / RAND_MAX);
 }
-
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    int b = 8;
+    int b = 32;
     drawDensity(nodes, NODES, b, 1.0);
     drawPoints(nodes, NODES, 5.0, NULL);
     drawGrid(2.0/b, 2.0/b, 1.0);
+    float circleColor[] = {0.88, 0.61, 0.0};
+    drawCircle(make_float2(0.0, 0.0), 0.5, 100, 2.5, circleColor);
     glFlush();
 }
 
@@ -44,6 +45,8 @@ int main(int argc, char** argv)
         nodes[i].y = rnd(2.0) - 1.0;
     }
     
+    cudaMemcpyToSymbol(c_nodes, nodes, sizeof(float2)*NODES);
+
     pixels = (float*)malloc(DIM*DIM*3*sizeof(float));
     cudaMalloc(&buffer, DIM*DIM*3*sizeof(float));
     
@@ -64,8 +67,6 @@ int main(int argc, char** argv)
 
     glutMainLoop();
 
-    free(pixels); free(nodes);
-    cudaFree(buffer);
     return(0);
 
 }
