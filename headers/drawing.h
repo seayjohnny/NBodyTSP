@@ -23,7 +23,7 @@ void drawPoint(float2 point, float size, float color[3])
     glBegin(GL_POINTS);
     glVertex2f(point.x,point.y);
     glEnd();
-    glFlush();
+    //glFlush();
 }
 
 void drawPoints(float2 *points, int n, float size, float color[3])
@@ -45,7 +45,7 @@ void drawPoints(float2 *points, int n, float size, float color[3])
 		glVertex2f(points[i].x,points[i].y);
 		glEnd();
     }
-    glFlush();
+    //glFlush();
 
 }
 
@@ -76,7 +76,7 @@ void drawGrid(float dx, float dy, float scale)
     glVertex2f(-scale, 0.0);
 
     glEnd();
-    glFlush();
+    //glFlush();
 }
 
 void drawRect(float2 pos, float2 dim, float scale)
@@ -88,7 +88,7 @@ void drawRect(float2 pos, float2 dim, float scale)
     glVertex2f(pos.x+dim.x, pos.y+dim.y);
     glVertex2f(pos.x, pos.y+dim.y);
     glEnd();
-    glFlush();
+    //glFlush();
 }
 
 void drawCircle(float2 center, float radius, int segments, float thickness, float color[3])
@@ -101,10 +101,10 @@ void drawCircle(float2 center, float radius, int segments, float thickness, floa
     for(int i = 0; i <= segments; i++)
     {
         float theta = i*2.0*pi/segments;
-        glVertex2f(radius*cos(theta), radius*sin(theta));
+        glVertex2f(radius*cos(theta)+center.x, radius*sin(theta)+center.y);
     }
     glEnd();
-    glFlush();
+    //glFlush();
 }
 
 #endif

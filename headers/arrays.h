@@ -44,4 +44,16 @@ float getLargestMagnitude(float2* vec, int n)
 	return(maxMag);
 }
 
+float getSmallestMagnitude(float2* vec, int n)
+{
+	float minMag = sqrtf( (vec[0].x*vec[0].x) + (vec[0].y*vec[0].y));
+    for(int i = 1; i < n; i++)
+    {
+        float mag = sqrtf( (vec[i].x*vec[i].x) + (vec[i].y*vec[i].y));
+        if(mag < minMag) minMag = mag;
+    }
+	
+	return(minMag);
+}
+
 #endif

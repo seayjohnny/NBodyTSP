@@ -15,6 +15,8 @@ __global__ void getDensity(int *filled, float2 *centers, float* range, int b, fl
     float xBar = 0.0;
     float yBar = 0.0;
 
+    __syncthreads();
+
     for(int i = 0; i < n; i++)
     {
         if(c_nodes[i].x >= xr[0] && c_nodes[i].x <= xr[1])
@@ -32,6 +34,8 @@ __global__ void getDensity(int *filled, float2 *centers, float* range, int b, fl
         centers[id].x = xBar/filled[id];
         centers[id].y = yBar/filled[id];
     }
+
+    __syncthreads();
 
 }
 
@@ -69,6 +73,7 @@ void drawDensity(float2* nodes, int numberOfNodes, int bins, float scale)
     cudaMemcpy(c_nodes, nodes, numberOfNodes*sizeof(float2), cudaMemcpyHostToDevice);
     
     getDensity<<<dimGrid, dimBlock>>>(filled, centers, range_GPU, b, c_nodes, numberOfNodes);
+
     cudaMemcpy(filled_cpu, filled, sizeof(int)*b*b, cudaMemcpyDeviceToHost);
     cudaMemcpy(centers_cpu, centers, b*b*sizeof(float2), cudaMemcpyDeviceToHost);
 
@@ -88,8 +93,8 @@ void drawDensity(float2* nodes, int numberOfNodes, int bins, float scale)
     {
         if(filled_cpu[i])
         {
-            float color[] = {1.0, 0.0, 0.0}; 
-            drawPoint(centers_cpu[i], 2.5, color);
+            float color[] = {0.3, 0.3, 1.0}; 
+            drawPoint(centers_cpu[i], 2.0, color);
         }
     }
 

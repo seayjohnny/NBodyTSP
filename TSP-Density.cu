@@ -2,19 +2,35 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "./headers/dataio.h"
 #include "./headers/rendering.h"
 #include "./headers/drawing.h"
 #include "./headers/density.cuh"
 
+
 #define DIM 1024
 #define FP "./datasets/att48/coords.txt"
 int numberOfNodes = getNumberOfLines(FP);
 float2 *nodes = (float2*)malloc((numberOfNodes)*sizeof(float2));
+
 float4 boundingBox;
 float2 geometricCenter;
 
 int mouse_x, mouse_y;
+
+void delay(int number_of_seconds) 
+{ 
+    // Converting time into milli_seconds 
+    int milli_seconds = 1000 * number_of_seconds; 
+  
+    // Stroing start time 
+    clock_t start_time = clock(); 
+  
+    // looping till required time is not acheived 
+    while (clock() < start_time + milli_seconds)
+        ; 
+} 
 
 float2 maxValues(float2 *nodes, int n)
 {
@@ -70,6 +86,10 @@ float4 getBoundingBox(float2 *nodes, int n)
 	return(make_float4(min.x, min.y, max.x, max.y));
 }
 
+float rnd(float x)
+{
+    return(x*rand() / RAND_MAX);
+}
 
 void display()
 {
@@ -82,6 +102,14 @@ void display()
     drawPoints(nodes, numberOfNodes, 2.5, colorNodes);
     drawGrid(2*scale/b, 2*scale/b, scale);
     drawPoint(geometricCenter, 2.5, colorCenter);
+    glFlush();
+/*    delay(50);
+    for(int i = 0; i < numberOfNodes; i++)
+    {
+        nodes[i].x += rnd(0.06) - 0.03;
+        nodes[i].y += rnd(0.06) - 0.03;
+    }
+    glutPostRedisplay();*/
 }
 
 void mouseMotion(int mx, int my)
@@ -102,7 +130,7 @@ int main(int argc, char** argv)
     float dx = boundingBox.z - boundingBox.x;
     float dy = boundingBox.w - boundingBox.y;
 
-    linearTransformPoints(nodes, numberOfNodes, -0.5, 0.75, dx, dy);
+    linearTransformPoints(nodes, nodes, numberOfNodes, -0.5, 0.75, dx, dy);
     printf("🗹  Transformed node positions\n");
 
     geometricCenter = getGeometricCenter(nodes, numberOfNodes);
