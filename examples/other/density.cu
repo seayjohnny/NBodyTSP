@@ -10,7 +10,7 @@
 #include "../../headers/rendering.h"
 
 #define DIM 1024
-#define NODES 50
+#define NODES 5000
 
 float2 *nodes = (float2*)malloc((NODES)*sizeof(float2));
 
@@ -28,7 +28,7 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    int b = 8;
+    int b = 32;
     drawDensity(nodes, NODES, b, 1.0);
     drawPoints(nodes, NODES, 5.0, NULL);
     drawGrid(2.0/b, 2.0/b, 1.0);

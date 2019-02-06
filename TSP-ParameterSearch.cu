@@ -491,8 +491,9 @@ double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, 
         drawDensity(density, densityCenters, range, b);
         drawBubbles(bubbles, b, outerRadius);
         drawNBodyExtrusion(pos, innerRadius, outerRadius, 0, 0, n, b);
-        
+        printf("\n\t--- Paused for initial display. Press ENTER to continue. ---");
         glutSwapBuffers();
+        getchar();
     }
     
     outerWallDirection = 0;
@@ -668,7 +669,8 @@ void display()
     {
         displayFlag++;
     }
-    else{
+    else
+    {
         int b = BINS;
         float scale = 1.0;
         float colorNodes[3] = {1.0, 0.1, 0.1};
@@ -683,7 +685,6 @@ void display()
                 drawPoint(geometricCenter, 2.5, colorCenter);
             }
             
-            printf("\t☐  Running n-body extrustion.");
             nBodyExtrustionTSP(nodes, posNbody, velNbody, accNbody, massNbody, numberOfNodes, b);
             printf("\r\t🗹  N-body extrustion completed.\n");
             getNBodyPath(posNbody, nBodyPath, numberOfNodes);
@@ -768,14 +769,14 @@ int main(int argc, char** argv)
 	printf("\t🗹  Normalized nodes. Normalizing factor = %f\n", normalizingFactor);
 
     setNbodyInitialConditions(nodes, posNbody, velNbody, massNbody, numberOfNodes);
-    printf("\t🗹  Set n-body initial conditions.\n");
+    printf("\t🗹  Set n-body initial conditions.");
 
     if(DRAW)
     {
         glutInit(&argc,argv);
-        glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+        glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_MULTISAMPLE);
         glutInitWindowSize(DIM,DIM);
-        glutInitWindowPosition(2800,50);
+        //glutInitWindowPosition(2800,50);
         glutCreateWindow("Traveling Salesman Problem");
         glutDisplayFunc(display);
         glutPassiveMotionFunc(mouseMotion);
@@ -787,11 +788,6 @@ int main(int argc, char** argv)
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
         glEnable(GL_BLEND);
         glutMainLoop();
-    }
-    else
-    {
-        display();
-        display();
     }
     /* ------------------------------ OpenGL Calls ------------------------------ */
 

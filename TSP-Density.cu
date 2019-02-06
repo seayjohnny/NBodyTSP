@@ -94,22 +94,21 @@ float rnd(float x)
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    int b = 4;
-    float scale = 0.755;
-    float colorNodes[3] = {1.0, 0.1, 0.1};
+    int b = 8;
+    float scale = 1.0;
+    float colorNodes[3] = {0.1, 0.1, 0.1};
     float colorCenter[3] = {0.0, 1.0, 0.2};
-    drawDensity(nodes, numberOfNodes, b, scale);
-    drawPoints(nodes, numberOfNodes, 2.5, colorNodes);
-    drawGrid(2*scale/b, 2*scale/b, scale);
-    drawPoint(geometricCenter, 2.5, colorCenter);
-    glFlush();
-/*    delay(50);
+    //drawDensity(nodes, numberOfNodes, b, scale);
+    drawPoints(nodes, numberOfNodes, 3.0, colorNodes);
+    //drawGrid(2*scale/b, 2*scale/b, scale);
+    //drawPoint(geometricCenter, 2.5, colorCenter);
+    glutSwapBuffers();
+    delay(50);
     for(int i = 0; i < numberOfNodes; i++)
     {
         nodes[i].x += rnd(0.06) - 0.03;
         nodes[i].y += rnd(0.06) - 0.03;
     }
-    glutPostRedisplay();*/
 }
 
 void mouseMotion(int mx, int my)
@@ -140,13 +139,14 @@ int main(int argc, char** argv)
     geometricCenter = getGeometricCenter(nodes, numberOfNodes);
     printf("🗹  Aligned geometric center to origin\n");*/
     
-	glutInit(&argc,argv);
+    glutInit(&argc,argv);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_MULTISAMPLE);
 	glutInitWindowSize(DIM,DIM);
 	glutInitWindowPosition(0,0);
 	glutCreateWindow("Traveling Salesman Problem");
     glutDisplayFunc(display);
     glutPassiveMotionFunc(mouseMotion);
-    glClearColor(0.1, 0.1, 0.1, 0.1);
+    glClearColor(1.0, 1.0, 1.0, 0.1);
     glEnable(GL_MULTISAMPLE_ARB);
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
