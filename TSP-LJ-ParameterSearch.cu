@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "./headers/dataio.h"
 #include "./headers/rendering.h"
 #include "./headers/drawing.h"
@@ -11,26 +12,26 @@
 #define BLOCK 1024
 
 
-#define SLOPE_REPULSION 50.0
-#define FORCE_CUTOFF 0.10
-#define MAG_ATTRACTION 0.5
+/* #define M -0.0015
+#define P 5.0
+#define Q 11.0 */
 #define WALL_STRENGTH 200000.0
-#define DAMP 20.0
+#define DAMP 200.0
 #define MASS 80.0
-#define BINS 8
-#define MIN_BIN_DENSITY 3
+#define BINS 1
+#define MIN_BIN_DENSITY 0
 #define MAX_BUBBLES 5
 
 #define LOWER_PRESSURE_LIMIT 500
-#define UPPER_PRESSURE_LIMIT 1000
+#define UPPER_PRESSURE_LIMIT 5000
 
-#define FP "./datasets/att48/coords.txt"
-#define FP_OPT "./datasets/att48/path.txt"
+#define FP "./datasets/ch150/coords.txt"
+#define FP_OPT "./datasets/ch150/path.txt"
 #define FP_LOG "./runlog.txt"
 
-#define DRAW 1
+#define DRAW 0
 
-OutputParameters params;
+OutputParametersLJ params;
 
 int numberOfNodes = getNumberOfLines(FP);
 float2 *orginalCoords = (float2*)malloc((numberOfNodes)*sizeof(float2));
@@ -58,13 +59,18 @@ int displayFlag = 0;
 int extrustionFlag = 0;
 double timer;
 
-void drawNBodyExtrusion(float2* pos, float innerRadius, float outerRadius, int innerDirection, int outterDirection, int n, int b);
+void drawNBodyExtrusion(float2* pos, float innerRadius, float outerRadius, int innerDirection, int outterDirection, int n);
 void drawDensity(int *density, float2 *densityCenters, float *range, int b);
 void drawBubbles(float4 *bubbles, int b, float normFactor);
 
 /* ========================================================================== */
 /*                                 DATA SETUP                                 */
 /* ========================================================================== */
+
+float randInRange(float a, float b)
+{
+    return a + rand()*(b - a)/((float)RAND_MAX);
+}
 
 float2 maxValues(float2 *nodes, int n)
 {
@@ -124,7 +130,7 @@ void initializeBubbles(float4 *bubbles, int *density, float2* densityCenters, fl
 {
     for(int i = 0; i < b*b; i++)
     {
-        if(density[i] >= MIN_BIN_DENSITY)
+        if(density[i] >= MIN_BIN_DENSITY && MIN_BIN_DENSITY != 0)
         {
             bubbles[i].x = densityCenters[i].x;
             bubbles[i].y = densityCenters[i].y;
@@ -159,7 +165,7 @@ double findPressureOnOuterWall(float2 *pos, float outerRadius, int n)
 	sum = 0.0;
 	for(i = 0; i < n; i++)
 	{
-		temp = sqrt(pos[i].x*pos[i].x + pos[i].y*pos[i].y) - outerRadius;
+        temp = sqrt(pos[i].x*pos[i].x + pos[i].y*pos[i].y) - outerRadius;
 		if( 0 < temp) 
 		{
 			sum += temp;
@@ -268,7 +274,7 @@ double getPathCost(float2 *node, int *path, int n, int debug)
 /*                               CUDA FUNCTIONS                               */
 /* ========================================================================== */
 
-__global__ void accelerations(float2* nodes, float2* pos, float2* vel, float2* acc, float *mass, float innerRadius, float outerRadius, float4 *bubbles, int n, int b, float dt)
+__global__ void accelerations(float2* nodes, float2* pos, float2* vel, float2* acc, float *mass, float innerRadius, float outerRadius, float4 *bubbles, int n, int b, float dt, float M, float p, float q)
 {
     float2 force;
     float2 node, nodePos;
@@ -301,20 +307,12 @@ __global__ void accelerations(float2* nodes, float2* pos, float2* vel, float2* a
             edx = shNodes[i].x - node.x;
             edy = shNodes[i].y - node.y;
             edgeLength = sqrtf(edx*edx + edy*edy);
-            
-            if(dist <= edgeLength)
-            {
-                forceMag = -(edgeLength - dist)*SLOPE_REPULSION;
+            float a = powf(q/p, 1/(q-p));
+            float b = powf(a*edgeLength, p);
+            double H = M*b/(1 - p/q);
+            float c = powf(edgeLength/dist, q-p);
 
-            }
-            else if(edgeLength < dist && dist < FORCE_CUTOFF)
-            {
-                forceMag =  MAG_ATTRACTION/edgeLength;
-            }
-            else
-            {
-                forceMag = 0.0;
-            }
+            forceMag = (c-1)*H/powf(dist, p);
             
             force.x += forceMag*dx/dist;
             force.y += forceMag*dy/dist;
@@ -424,7 +422,7 @@ __global__ void getDensity(float2 *points, int *density, float2 *densityCenters,
 
 }
 
-double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, float *mass, int n, int b)
+double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, float *mass, int n, int b, float M, float p, float q)
 {
 
 /* ------------------------------- N-body data ------------------------------ */
@@ -481,26 +479,27 @@ double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, 
     stopSeperation = getSmallestMagnitude(pos, n)/2.0;
     innerRadius = 0.0;
     outerRadius = getLargestMagnitude(pos, n);
+
     dr = outerRadius/1000;
 
     initializeBubbles(bubbles, density, densityCenters, innerRadius, b);
     cudaMemcpy(bubblesGPU, bubbles, b*b*sizeof(float4), cudaMemcpyHostToDevice);
     cudaDeviceSynchronize();
-    if(DRAW)
-    {
-        drawDensity(density, densityCenters, range, b);
-        drawBubbles(bubbles, b, outerRadius);
-        drawNBodyExtrusion(pos, innerRadius, outerRadius, 0, 0, n, b);
-        printf("\n\t--- Paused for initial display. Press ENTER to continue. ---");
-        glutSwapBuffers();
-        getchar();
-    }
+
+
+
+    drawDensity(density, densityCenters, range, b);
+    drawBubbles(bubbles, b, outerRadius);
+    drawNBodyExtrusion(pos, innerRadius, outerRadius, 0, 0, n);
+    //printf("\n\t--- Paused for initial display. Press ENTER to continue. ---");
+    if(DRAW) glutSwapBuffers();
+    //getchar();
     
-    outerWallDirection = 0;
-    innerWallDirection = 1;
+    outerWallDirection = -1;
+    innerWallDirection = 0;
     pressure = 0.0;
     
-    drawCount = 0;
+    drawCount = 0;  
     while(innerRadius + stopSeperation < outerRadius)
     {
         printf("\r\t☐  Running n-body extrustion.  %.0f%%", floor(100*innerRadius/outerRadius));
@@ -509,28 +508,31 @@ double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, 
         t = 0.0;
         while(t < 2.0)
         {
-            accelerations<<<1, numberOfNodes>>>(nodesGPU, posGPU, velGPU, accGPU, massGPU, innerRadius, outerRadius, bubblesGPU, n, b, dt);
+            accelerations<<<1, numberOfNodes>>>(nodesGPU, posGPU, velGPU, accGPU, massGPU, innerRadius, outerRadius, bubblesGPU, n, b, dt, M, p, q);
             getDensity<<<grid, 1>>>(posGPU, densityGPU, densityCentersGPU, rangeGPU, b, n);
             cudaDeviceSynchronize();
             if(drawCount == 100)
             {
+                if(DRAW)
+                {
+                    
+                    cudaMemcpy(density, densityGPU, b*b*sizeof(int), cudaMemcpyDeviceToHost);
+                    cudaMemcpy(densityCenters, densityCentersGPU, b*b*sizeof(float2), cudaMemcpyDeviceToHost);
+                }
+                
                 cudaMemcpy(pos, posGPU, n * sizeof(float2), cudaMemcpyDeviceToHost);
-                cudaMemcpy(density, densityGPU, b*b*sizeof(int), cudaMemcpyDeviceToHost);
-                cudaMemcpy(densityCenters, densityCentersGPU, b*b*sizeof(float2), cudaMemcpyDeviceToHost);
                 cudaMemcpy(bubbles, bubblesGPU, b*b*sizeof(float4), cudaMemcpyDeviceToHost);
                 cudaDeviceSynchronize();
                 
                 updateBubbles(bubbles, innerWallDirection*dr, b);
                 cudaMemcpy(bubblesGPU, bubbles, b*b*sizeof(float4), cudaMemcpyHostToDevice);
-                
-                if(DRAW)
-                {
-                    drawDensity(density, densityCenters, range, b);
-                    drawBubbles(bubbles, b, outerRadius);
-                    drawNBodyExtrusion(pos, innerRadius, outerRadius, innerWallDirection, outerWallDirection, n, b);
-                    glutSwapBuffers();
-                }
                 cudaDeviceSynchronize();
+
+                drawDensity(density, densityCenters, range, b);
+                drawBubbles(bubbles, b, outerRadius);
+                drawNBodyExtrusion(pos, innerRadius, outerRadius, innerWallDirection, outerWallDirection, n);
+                if(DRAW) glutSwapBuffers();
+
                 drawCount = 0;
             }
             drawCount++;
@@ -556,7 +558,9 @@ double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, 
         cudaMemcpy(bubblesGPU, bubbles, b*b*sizeof(float4), cudaMemcpyHostToDevice);
         cudaDeviceSynchronize();
 
+
         pressure = findPressureOnOuterWall(pos, outerRadius, n);
+
         if(pressure < LOWER_PRESSURE_LIMIT)
 		{
 			innerWallDirection = 0;
@@ -572,12 +576,14 @@ double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, 
 		{
 			innerWallDirection = 0;
 			outerWallDirection = 1;
-		}
+        }
+        cudaDeviceSynchronize();
     }
 
     
     cudaFree(nodesGPU); cudaFree(posGPU); cudaFree(velGPU); cudaFree(accGPU); cudaFree(massGPU);
     cudaFree(rangeGPU); cudaFree(densityGPU); cudaFree(densityCentersGPU); cudaFree(bubblesGPU);
+    cudaDeviceSynchronize();
     free(range); free(density); free(densityCenters); free(bubbles);
     return(0);
 
@@ -588,45 +594,54 @@ double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, 
 /* ========================================================================== */
 void drawBubbles(float4 *bubbles, int b, float normFactor)
 {
-    float2 center;
-    float color[] = {0.2, 0.8, 1.0};
-    for(int i = 0; i < b*b;i++)
+    if(DRAW)
     {
-        if(bubbles[i].z > 0.0)
+        float2 center;
+        float color[] = {0.2, 0.8, 1.0};
+        for(int i = 0; i < b*b;i++)
         {
-            center = make_float2(bubbles[i].x, bubbles[i].y);
-            drawCircle(center, bubbles[i].z/normFactor, 50, 1.0, color);
+            if(bubbles[i].z > 0.0)
+            {
+                center = make_float2(bubbles[i].x, bubbles[i].y);
+                drawCircle(center, bubbles[i].z/normFactor, 50, 1.0, color);
+            }
         }
     }
+
 }
 
 void drawDensity(int *density, float2 *densityCenters, float *range, int b)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-    for(int i = 0; i < b*b; i++)
+    if(DRAW)
     {
-        if(density[i])
+        glClear(GL_COLOR_BUFFER_BIT);
+        for(int i = 0; i < b*b; i++)
         {
-            float xr[2] = {range[i%b], range[i%b+1]};
-            float yr[2] = {range[b-1-i/b], range[b-1-i/b+1]};
-
-            drawRect(make_float2(xr[0], yr[0]), make_float2(xr[1]-xr[0], yr[1]-yr[0]), ((float)density[i])/sqrtf(numberOfNodes));
-
+            if(density[i])
+            {
+                float xr[2] = {range[i%b], range[i%b+1]};
+                float yr[2] = {range[b-1-i/b], range[b-1-i/b+1]};
+    
+                drawRect(make_float2(xr[0], yr[0]), make_float2(xr[1]-xr[0], yr[1]-yr[0]), ((float)density[i])/sqrtf(numberOfNodes));
+    
+            }
+        }
+        //linearScalePoints(centers_cpu, b*b, 1.5);
+        for(int i = 0; i < b*b; i++)
+        {
+            if(density[i])
+            {
+                float color[] = {0.3, 0.3, 1.0}; 
+                drawPoint(densityCenters[i], 2.0, color);
+            }
         }
     }
-    //linearScalePoints(centers_cpu, b*b, 1.5);
-    for(int i = 0; i < b*b; i++)
-    {
-        if(density[i])
-        {
-            float color[] = {0.3, 0.3, 1.0}; 
-            drawPoint(densityCenters[i], 2.0, color);
-        }
-    }
+
 }
 
-void drawNBodyExtrusion(float2* pos, float innerRadius, float outerRadius, int innerDirection, int outterDirection, int n, int b)
+void drawNBodyExtrusion(float2* pos, float innerRadius, float outerRadius, int innerDirection, int outterDirection, int n)
 {
+
     int lineAmount = 100;
     
     float2 center = make_float2(0.0, 0.0);
@@ -638,28 +653,34 @@ void drawNBodyExtrusion(float2* pos, float innerRadius, float outerRadius, int i
     
     float innerCircleColor[] = {0.88, 0.61, 0.0};
     float outerCircleColor[] = {0.88, 0.20, 0.0};
-    drawCircle(center, innerRadius, lineAmount, 2.0, innerCircleColor);
-    drawCircle(center, outerRadius, lineAmount, 2.0, outerCircleColor);
     linearScalePoints(pos, n, 1/normFactor);
-    drawPoints(pos, n, 5.0, NULL);
+
+    if(DRAW){
+        drawCircle(center, innerRadius, lineAmount, 2.0, innerCircleColor);
+        drawCircle(center, outerRadius, lineAmount, 2.0, outerCircleColor);
+        drawPoints(pos, n, 5.0, NULL);
+    }
+
 }
 
 void drawNBodyPath(float2 *nodes, int *path, int n)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    if(DRAW){
+        glClear(GL_COLOR_BUFFER_BIT);
 
-    glLineWidth(2.0);
-    glColor3f(1.0, 0.2, 0.2);
-    glBegin(GL_LINE_LOOP);
-    for(int i = 0; i < n; i++)
-    {
-        glVertex2f(nodes[path[i]].x, nodes[path[i]].y);
+        glLineWidth(2.0);
+        glColor3f(1.0, 0.2, 0.2);
+        glBegin(GL_LINE_LOOP);
+        for(int i = 0; i < n; i++)
+        {
+            glVertex2f(nodes[path[i]].x, nodes[path[i]].y);
+        }
+        glEnd();
+
+
+        drawPoints(nodes, n, 5.0, NULL);
+        glutSwapBuffers();
     }
-    glEnd();
-    
-
-    drawPoints(nodes, n, 5.0, NULL);
-    glutSwapBuffers();
 }
 
 void display()
@@ -669,60 +690,59 @@ void display()
     {
         displayFlag++;
     }
-    else
-    {
-        int b = BINS;
-        float scale = 1.0;
-        float colorNodes[3] = {1.0, 0.1, 0.1};
-        float colorCenter[3] = {0.0, 1.0, 0.2};
-        //drawDensity(nodes, numberOfNodes, b, scale);
-        if(extrustionFlag == 0)
-        {
-            if(DRAW)
-            {
-                drawPoints(nodes, numberOfNodes, 2.5, colorNodes);
-                drawGrid(2*scale/b, 2*scale/b, scale);
-                drawPoint(geometricCenter, 2.5, colorCenter);
-            }
-            
-            nBodyExtrustionTSP(nodes, posNbody, velNbody, accNbody, massNbody, numberOfNodes, b);
-            printf("\r\t🗹  N-body extrustion completed.\n");
-            getNBodyPath(posNbody, nBodyPath, numberOfNodes);
-            
-            if(DRAW)
-            {
-                drawNBodyPath(nodes, nBodyPath, numberOfNodes);
-                glutSwapBuffers();
-            }
+    int b = BINS;
+    float scale = 1.0;
+    float colorNodes[3] = {1.0, 0.1, 0.1};
+    float colorCenter[3] = {0.0, 1.0, 0.2};
 
-            
-            printf("\t🗹  N-body path obtained.\n");
-            nBodyCost = getPathCost(orginalCoords, nBodyPath, numberOfNodes, 0);
-            printf("\t🗹  N-body path cost calculated. Cost = %f\n", nBodyCost);
-            percentDiff = 100*(nBodyCost - optimalCost)/optimalCost;
-            printf("\t🗹  N-body cost percent difference calculated. Percent Difference = %f%%\n", percentDiff);
-            endTimer(&timer);
-            params.slopeRepulsion = SLOPE_REPULSION;
-            params.forceCutoff = FORCE_CUTOFF;
-            params.magAttraction = MAG_ATTRACTION;
-            params.wallStrength = WALL_STRENGTH;
-            params.damp = DAMP;
-            params.mass = MASS;
-            params.bins = BINS;
-            params.minBinDensity = MIN_BIN_DENSITY;
-            params.lowerPressureLimit = LOWER_PRESSURE_LIMIT;
-            params.upperPressureLimit = UPPER_PRESSURE_LIMIT;
-            params.optimalCost = optimalCost;
-            params.nBodyCost = nBodyCost;
-            params.percentDiff = percentDiff;
-            params.drawn = DRAW;
-            params.runTime = timer;
-            logRun(FP_LOG, params);
-            printf("\t🗹  Logged run parameters and results to %s\n", FP_LOG);
+    float M, p, q;
+    M = randInRange(-0.0025, -0.0005);
+    p = randInRange(3.0, 13.0);
+    q = p + randInRange(1.5, 3.0);
 
-            extrustionFlag = 1;
-        }
-    }
+    //drawDensity(nodes, numberOfNodes, b, scale);
+  
+    startTimer(&timer);
+    setNbodyInitialConditions(nodes, posNbody, velNbody, massNbody, numberOfNodes);
+    printf("\t🗹  Set n-body initial conditions.\n");
+
+    drawPoints(nodes, numberOfNodes, 2.5, colorNodes);
+    drawGrid(2*scale/b, 2*scale/b, scale);
+    drawPoint(geometricCenter, 2.5, colorCenter);
+
+
+    nBodyExtrustionTSP(nodes, posNbody, velNbody, accNbody, massNbody, numberOfNodes, b, M, p, q);
+    printf("\r\t🗹  N-body extrustion completed.\n");
+    getNBodyPath(posNbody, nBodyPath, numberOfNodes);
+    
+    if(DRAW) drawNBodyPath(nodes, nBodyPath, numberOfNodes);
+
+    printf("\t🗹  N-body path obtained.\n");
+    nBodyCost = getPathCost(orginalCoords, nBodyPath, numberOfNodes, 0);
+    printf("\t🗹  N-body path cost calculated. Cost = %f\n", nBodyCost);
+    percentDiff = 100*(nBodyCost - optimalCost)/optimalCost;
+    printf("\t🗹  N-body cost percent difference calculated. Percent Difference = %f%%\n", percentDiff);
+    endTimer(&timer);
+    params.m = M;
+    params.p = p;
+    params.q = q;
+    params.wallStrength = WALL_STRENGTH;
+    params.damp = DAMP;
+    params.mass = MASS;
+    params.bins = BINS;
+    params.minBinDensity = MIN_BIN_DENSITY;
+    params.lowerPressureLimit = LOWER_PRESSURE_LIMIT;
+    params.upperPressureLimit = UPPER_PRESSURE_LIMIT;
+    params.optimalCost = optimalCost;
+    params.nBodyCost = nBodyCost;
+    params.percentDiff = percentDiff;
+    params.drawn = DRAW;
+    params.runTime = timer;
+    logLJRunShort(FP_LOG, params);
+    printf("\t🗹  Logged run parameters and results to %s\n", FP_LOG);
+
+    extrustionFlag = 1;
+    
 }
 
 void mouseMotion(int mx, int my)
@@ -738,7 +758,7 @@ void mouseMotion(int mx, int my)
 
 int main(int argc, char** argv)
 {
-    startTimer(&timer);
+    
     setbuf(stdout, NULL);
     /* ----------------------- Loading and Setting up Data ---------------------- */
     loadOptimalPath(FP_OPT, optimalPath, numberOfNodes);
@@ -769,7 +789,7 @@ int main(int argc, char** argv)
 	printf("\t🗹  Normalized nodes. Normalizing factor = %f\n", normalizingFactor);
 
     setNbodyInitialConditions(nodes, posNbody, velNbody, massNbody, numberOfNodes);
-    printf("\t🗹  Set n-body initial conditions.");
+    printf("\t🗹  Set n-body initial conditions.\n");
 
     if(DRAW)
     {
@@ -789,8 +809,16 @@ int main(int argc, char** argv)
         glEnable(GL_BLEND);
         glutMainLoop();
     }
-    /* ------------------------------ OpenGL Calls ------------------------------ */
+    else
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            srand(time(0));
+            display();
+        }
+    }
 
+    printf(">>>>>>>>>>>>>>>>>>>>>>>> DONE");
     free(nodes); free(posNbody); free(velNbody); free(accNbody); free(massNbody);
     free(nBodyPath); free(optimalPath);
 }

@@ -4,11 +4,30 @@
 #include <sys/time.h>
 #include <stdio.h>
 
-struct OutputParameters
+struct OutputParametersSpring
 {
     double slopeRepulsion;
     double forceCutoff;
     double magAttraction;
+    double wallStrength;
+    double damp;
+    double mass;
+    int bins;
+    int minBinDensity;
+    int lowerPressureLimit;
+    int upperPressureLimit;
+    double optimalCost;
+    double nBodyCost;
+    double percentDiff;
+    int drawn;
+    double runTime;
+};
+
+struct OutputParametersLJ
+{
+    double m;
+    double p;
+    double q;
     double wallStrength;
     double damp;
     double mass;
@@ -72,7 +91,8 @@ void loadOptimalPath(const char filename[MAX_FILE_NAME], int *path, int n)
     }
     fclose(fp);
 }
-void logRun(const char filename[MAX_FILE_NAME], OutputParameters params)
+
+void logSpringRun(const char filename[MAX_FILE_NAME], OutputParametersSpring params)
 {
     FILE *fp = fopen(filename, "a");
     fprintf(fp, "=================================\n");
@@ -95,6 +115,45 @@ void logRun(const char filename[MAX_FILE_NAME], OutputParameters params)
     fclose(fp);
 }
 
+void logLJRun(const char filename[MAX_FILE_NAME], OutputParametersLJ params)
+{
+    FILE *fp = fopen(filename, "a");
+    fprintf(fp, "=================================\n");
+    fprintf(fp, "\tM: %f\n", params.m);
+    fprintf(fp, "\tp: %f\n", params.p);
+    fprintf(fp, "\tq: %f\n", params.q);
+    fprintf(fp, "\tWall Strength: %f\n", params.wallStrength);
+    fprintf(fp, "\tDamp: %f\n", params.damp);
+    fprintf(fp, "\tMass: %f\n\n", params.mass);
+    fprintf(fp, "\tBins: %d\n", params.bins);
+    fprintf(fp, "\tMin Bin Density: %d\n\n", params.minBinDensity);
+    fprintf(fp, "\tLower Pressure Limit: %d\n", params.lowerPressureLimit);
+    fprintf(fp, "\tUpper Pressure Limit: %d\n\n", params.upperPressureLimit);
+    fprintf(fp, "\tOptimal Cost: %f\n", params.optimalCost);
+    fprintf(fp, "\tN-Body Cost: %f\n", params.nBodyCost);
+    fprintf(fp, "\tPercent Diff: %f\n", params.percentDiff);
+    fprintf(fp, "\tDrawn: %s\n", params.drawn ? "Yes":"No");
+    fprintf(fp, "\tRun Time: %.4f s\n", params.runTime/1000000);
+    fprintf(fp, "=================================\n");
+    fclose(fp);
+}
+
+void logLJRunShort(const char filename[MAX_FILE_NAME], OutputParametersLJ params)
+{
+    FILE *fp = fopen(filename, "a");
+    fprintf(fp, "=================================\n");
+    fprintf(fp, "\tM: %f\n", params.m);
+    fprintf(fp, "\tp: %f\n", params.p);
+    fprintf(fp, "\tq: %f\n", params.q);
+
+    fprintf(fp, "\tOptimal Cost: %f\n", params.optimalCost);
+    fprintf(fp, "\tN-Body Cost: %f\n", params.nBodyCost);
+    fprintf(fp, "\tPercent Diff: %f\n", params.percentDiff);
+
+    fprintf(fp, "\tRun Time: %.4f s\n", params.runTime/1000000);
+    fprintf(fp, "=================================\n");
+    fclose(fp);
+}
 
 void startTimer(double *timer)
 {

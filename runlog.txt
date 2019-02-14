@@ -359,3 +359,975 @@
 	Drawn: Yes
 	Run Time: 93.1298 s
 =================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36548.572830
+	Percent Diff: 9.023060
+	Drawn: Yes
+	Run Time: 71.6712 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 41662.591599
+	Percent Diff: 24.277992
+	Drawn: No
+	Run Time: 19.2189 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 41662.591599
+	Percent Diff: 24.277992
+	Drawn: No
+	Run Time: 19.6358 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 41662.591599
+	Percent Diff: 24.277992
+	Drawn: No
+	Run Time: 179.4179 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 41662.591599
+	Percent Diff: 24.277992
+	Drawn: No
+	Run Time: 19.3523 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 41662.591599
+	Percent Diff: 24.277992
+	Drawn: No
+	Run Time: 19.3947 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 41662.591599
+	Percent Diff: 24.277992
+	Drawn: No
+	Run Time: 19.4134 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36548.572830
+	Percent Diff: 9.023060
+	Drawn: No
+	Run Time: 73.5152 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36548.572830
+	Percent Diff: 9.023060
+	Drawn: No
+	Run Time: 40.6446 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 50962.108551
+	Percent Diff: 52.018112
+	Drawn: No
+	Run Time: 18.9877 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36548.572830
+	Percent Diff: 9.023060
+	Drawn: No
+	Run Time: 37.3682 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 41662.591599
+	Percent Diff: 24.277992
+	Drawn: No
+	Run Time: 22.1143 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 41662.591599
+	Percent Diff: 24.277992
+	Drawn: No
+	Run Time: 20.9308 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 38793.223801
+	Percent Diff: 15.718772
+	Drawn: No
+	Run Time: 134.9568 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36548.572830
+	Percent Diff: 9.023060
+	Drawn: No
+	Run Time: 40.7536 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36581.686356
+	Percent Diff: 9.121837
+	Drawn: Yes
+	Run Time: 37.4252 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36548.572830
+	Percent Diff: 9.023060
+	Drawn: Yes
+	Run Time: 65.6306 s
+=================================
+=================================
+	Slope Repulsion: 50.000000
+	Force Cutoff: 0.100000
+	Mag Attraction: 0.500000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36548.572830
+	Percent Diff: 9.023060
+	Drawn: Yes
+	Run Time: 60.4049 s
+=================================
+=================================
+	M: 1.000000
+	p: 3.000000
+	q: 5.000000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 158440.984497
+	Percent Diff: 372.623681
+	Drawn: Yes
+	Run Time: 33.7125 s
+=================================
+=================================
+	M: -100.000000
+	p: 3.000000
+	q: 5.000000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 132609.371277
+	Percent Diff: 295.568921
+	Drawn: Yes
+	Run Time: 33.3461 s
+=================================
+=================================
+	M: -1.000000
+	p: 3.000000
+	q: 5.000000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 39413.809738
+	Percent Diff: 17.569958
+	Drawn: Yes
+	Run Time: 98.0134 s
+=================================
+=================================
+	M: -0.100000
+	p: 3.000000
+	q: 5.000000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 38477.975662
+	Percent Diff: 14.778399
+	Drawn: Yes
+	Run Time: 56.9086 s
+=================================
+=================================
+	M: -0.010000
+	p: 3.000000
+	q: 5.000000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 38084.091629
+	Percent Diff: 13.603457
+	Drawn: Yes
+	Run Time: 52.5499 s
+=================================
+=================================
+	M: -0.010000
+	p: 7.000000
+	q: 13.000000
+	Wall Strength: 200000.000000
+	Damp: 20.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 37863.645035
+	Percent Diff: 12.945873
+	Drawn: Yes
+	Run Time: 59.8837 s
+=================================
+=================================
+	M: -0.010000
+	p: 7.000000
+	q: 13.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 37928.804810
+	Percent Diff: 13.140242
+	Drawn: Yes
+	Run Time: 72.6293 s
+=================================
+=================================
+	M: -0.001000
+	p: 7.000000
+	q: 13.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36501.178406
+	Percent Diff: 8.881685
+	Drawn: Yes
+	Run Time: 51.1254 s
+=================================
+=================================
+	M: -0.001000
+	p: 7.000000
+	q: 13.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36501.178406
+	Percent Diff: 8.881685
+	Drawn: Yes
+	Run Time: 51.5037 s
+=================================
+=================================
+	M: -0.001000
+	p: 7.000000
+	q: 13.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36501.178406
+	Percent Diff: 8.881685
+	Drawn: Yes
+	Run Time: 51.0592 s
+=================================
+=================================
+	M: -0.001000
+	p: 7.000000
+	q: 13.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36501.178406
+	Percent Diff: 8.881685
+	Drawn: No
+	Run Time: 47.9623 s
+=================================
+=================================
+	M: -0.000100
+	p: 7.000000
+	q: 13.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 40561.269531
+	Percent Diff: 20.992788
+	Drawn: Yes
+	Run Time: 97.9881 s
+=================================
+=================================
+	M: -0.000100
+	p: 7.000000
+	q: 13.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 250
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 43149.820343
+	Percent Diff: 28.714341
+	Drawn: Yes
+	Run Time: 39.1875 s
+=================================
+=================================
+	M: -0.001500
+	p: 7.000000
+	q: 13.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36084.517883
+	Percent Diff: 7.638801
+	Drawn: Yes
+	Run Time: 51.6302 s
+=================================
+=================================
+	M: -0.002000
+	p: 7.000000
+	q: 13.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36084.517883
+	Percent Diff: 7.638801
+	Drawn: Yes
+	Run Time: 53.6482 s
+=================================
+=================================
+	M: -0.001500
+	p: 9.000000
+	q: 15.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36501.178406
+	Percent Diff: 8.881685
+	Drawn: Yes
+	Run Time: 57.9258 s
+=================================
+=================================
+	M: -0.001500
+	p: 5.000000
+	q: 11.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 35765.875916
+	Percent Diff: 6.688304
+	Drawn: Yes
+	Run Time: 44.0929 s
+=================================
+=================================
+	M: -0.001500
+	p: 3.000000
+	q: 5.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 41361.056824
+	Percent Diff: 23.378525
+	Drawn: Yes
+	Run Time: 172.4884 s
+=================================
+=================================
+	M: -0.001500
+	p: 6.000000
+	q: 12.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36501.178406
+	Percent Diff: 8.881685
+	Drawn: Yes
+	Run Time: 46.6391 s
+=================================
+=================================
+	M: -0.001500
+	p: 5.000000
+	q: 11.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 33523.708359
+	N-Body Cost: 35765.875916
+	Percent Diff: 6.688304
+	Drawn: Yes
+	Run Time: 45.1821 s
+=================================
+=================================
+	M: -0.001500
+	p: 5.000000
+	q: 11.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 3
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 1000
+
+	Optimal Cost: 9291.352570
+	N-Body Cost: 10102.069717
+	Percent Diff: 8.725502
+	Drawn: Yes
+	Run Time: 45.7098 s
+=================================
+=================================
+	M: -0.001500
+	p: 5.000000
+	q: 11.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 7
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 10000
+
+	Optimal Cost: 6532.280891
+	N-Body Cost: 8297.859707
+	Percent Diff: 27.028520
+	Drawn: Yes
+	Run Time: 80.5604 s
+=================================
+=================================
+	M: -0.001500
+	p: 5.000000
+	q: 11.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 6
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 10000
+
+	Optimal Cost: 6532.280891
+	N-Body Cost: 8194.604735
+	Percent Diff: 25.447832
+	Drawn: Yes
+	Run Time: 80.2325 s
+=================================
+=================================
+	M: -0.001500
+	p: 5.000000
+	q: 11.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 6
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 5000
+
+	Optimal Cost: 6532.280891
+	N-Body Cost: 8323.353337
+	Percent Diff: 27.418791
+	Drawn: Yes
+	Run Time: 86.1796 s
+=================================
+=================================
+	M: -0.001500
+	p: 5.000000
+	q: 11.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 0
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 5000
+
+	Optimal Cost: 6532.280891
+	N-Body Cost: 8653.837838
+	Percent Diff: 32.478042
+	Drawn: Yes
+	Run Time: 83.7190 s
+=================================
+=================================
+	M: -0.001500
+	p: 5.000000
+	q: 11.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 7
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 5000
+
+	Optimal Cost: 6532.280891
+	N-Body Cost: 8367.811775
+	Percent Diff: 28.099387
+	Drawn: Yes
+	Run Time: 83.4253 s
+=================================
+=================================
+	M: -0.001500
+	p: 5.000000
+	q: 11.000000
+	Wall Strength: 200000.000000
+	Damp: 200.000000
+	Mass: 80.000000
+
+	Bins: 8
+	Min Bin Density: 7
+
+	Lower Pressure Limit: 500
+	Upper Pressure Limit: 5000
+
+	Optimal Cost: 6532.280891
+	N-Body Cost: 8367.811775
+	Percent Diff: 28.099387
+	Drawn: No
+	Run Time: 85.8765 s
+=================================
+=================================
+	M: -0.000820
+	p: 6.943830
+	q: 12.830992
+	Optimal Cost: 33523.708359
+	N-Body Cost: 42634.377029
+	Percent Diff: 27.176793
+	Run Time: 33.3639 s
+=================================
+=================================
+	M: -0.000820
+	p: 6.943830
+	q: 12.830992
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36501.178406
+	Percent Diff: 8.881685
+	Run Time: 62.9223 s
+=================================
+=================================
+	M: -0.000820
+	p: 6.943830
+	q: 12.830992
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36501.178406
+	Percent Diff: 8.881685
+	Run Time: 52.7661 s
+=================================
+=================================
+	M: -0.000820
+	p: 6.943830
+	q: 12.830992
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36501.178406
+	Percent Diff: 8.881685
+	Run Time: 50.3334 s
+=================================
+=================================
+	M: -0.000820
+	p: 6.943830
+	q: 12.830992
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36501.178406
+	Percent Diff: 8.881685
+	Run Time: 101.4403 s
+=================================
+=================================
+	M: -0.000820
+	p: 6.943830
+	q: 12.830992
+	Optimal Cost: 33523.708359
+	N-Body Cost: 36501.178406
+	Percent Diff: 8.881685
+	Run Time: 120.1484 s
+=================================
+=================================
+	M: -0.001434
+	p: 5.725738
+	q: 5.889248
+	Optimal Cost: 6532.280891
+	N-Body Cost: 8500.446517
+	Percent Diff: 30.129838
+	Run Time: 100.0699 s
+=================================
+=================================
+	M: -0.001385
+	p: 9.527187
+	q: 12.250774
+	Optimal Cost: 6532.280891
+	N-Body Cost: 8295.631419
+	Percent Diff: 26.994408
+	Run Time: 97.7369 s
+=================================
