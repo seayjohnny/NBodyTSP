@@ -1,5 +1,4 @@
-#ifndef RENDERINGH
-#define RENDERINGH
+#pragma once
 
 #include "./arrays.h"
 
@@ -38,5 +37,3 @@ float linearScalePoints(float2 *points, int n, float scale)
     
     return(scale/maxDist);
 }
-
-#endif

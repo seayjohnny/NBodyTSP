@@ -29,7 +29,7 @@
 #define FP_OPT "./datasets/ch150/path.txt"
 #define FP_LOG "./runlog.txt"
 
-#define DRAW 0
+#define DRAW 1
 
 OutputParametersLJ params;
 
@@ -200,27 +200,27 @@ void getNBodyPath(float2 *pos, int* path, int n)
 	
 	for(i = 0; i < n; i++)
 	{
-		if(pos[i].x == 0 && pos[i].y == 0)
+		if(posNbody[i].x == 0 && posNbody[i].y == 0)
 		{
 			angle[i] = 0.0;
 		}
-		else if(pos[i].x >= 0 && pos[i].y >= 0)
+		else if(posNbody[i].x >= 0 && posNbody[i].y >= 0)
 		{
-			if(pos[i].x == 0) angle[i] = 90.0;
-			else angle[i] = atan(pos[i].y/pos[i].x)*180.0/pi;
+			if(posNbody[i].x == 0) angle[i] = 90.0;
+			else angle[i] = atan(posNbody[i].y/posNbody[i].x)*180.0/pi;
 		}
-		else if(pos[i].x < 0 && pos[i].y >= 0)
+		else if(posNbody[i].x < 0 && posNbody[i].y >= 0)
 		{
-			angle[i] = 180.0 - atan(pos[i].y/(-pos[i].x))*180.0/pi;
+			angle[i] = 180.0 - atan(posNbody[i].y/(-posNbody[i].x))*180.0/pi;
 		}
-		else if(pos[i].x <= 0 && pos[i].y < 0)
+		else if(posNbody[i].x <= 0 && posNbody[i].y < 0)
 		{
-			if(pos[i].x == 0) angle[i] = 270.0;
-			else angle[i] = 180.0 + atan(pos[i].y/pos[i].x)*180.0/pi;
+			if(posNbody[i].x == 0) angle[i] = 270.0;
+			else angle[i] = 180.0 + atan(posNbody[i].y/posNbody[i].x)*180.0/pi;
 		}
 		else
 		{
-			angle[i] = 360.0 - atan(-pos[i].y/pos[i].x)*180.0/pi;
+			angle[i] = 360.0 - atan(-posNbody[i].y/posNbody[i].x)*180.0/pi;
 		}
 	}
 	
@@ -237,15 +237,14 @@ void getNBodyPath(float2 *pos, int* path, int n)
 			if(angle[i] < minValue && used[i] == 0)
 			{
 				minValue = angle[i];
-				path[k] = i;
+				nBodyPath[k] = i;
 			}
 		}
-		used[path[k]] = 1;
+		used[nBodyPath[k]] = 1;
 		//printf("path[%d] = %d\n", k, path[k]);
-	}
-	
-	free(angle);
-	free(used);
+    }
+    free(angle);
+    free(used);
 }
 
 double getPathCost(float2 *node, int *path, int n, int debug)
@@ -486,8 +485,6 @@ double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, 
     cudaMemcpy(bubblesGPU, bubbles, b*b*sizeof(float4), cudaMemcpyHostToDevice);
     cudaDeviceSynchronize();
 
-
-
     drawDensity(density, densityCenters, range, b);
     drawBubbles(bubbles, b, outerRadius);
     drawNBodyExtrusion(pos, innerRadius, outerRadius, 0, 0, n);
@@ -527,6 +524,7 @@ double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, 
                 updateBubbles(bubbles, innerWallDirection*dr, b);
                 cudaMemcpy(bubblesGPU, bubbles, b*b*sizeof(float4), cudaMemcpyHostToDevice);
                 cudaDeviceSynchronize();
+
 
                 drawDensity(density, densityCenters, range, b);
                 drawBubbles(bubbles, b, outerRadius);
@@ -586,7 +584,6 @@ double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, 
     cudaDeviceSynchronize();
     free(range); free(density); free(densityCenters); free(bubbles);
     return(0);
-
 }
 
 /* ========================================================================== */
@@ -645,15 +642,10 @@ void drawNBodyExtrusion(float2* pos, float innerRadius, float outerRadius, int i
     int lineAmount = 100;
     
     float2 center = make_float2(0.0, 0.0);
-    float normFactor = outerRadius;
-
-    outerRadius /= normFactor;
-    innerRadius /= normFactor;
 
     
     float innerCircleColor[] = {0.88, 0.61, 0.0};
     float outerCircleColor[] = {0.88, 0.20, 0.0};
-    linearScalePoints(pos, n, 1/normFactor);
 
     if(DRAW){
         drawCircle(center, innerRadius, lineAmount, 2.0, innerCircleColor);

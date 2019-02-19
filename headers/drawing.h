@@ -10,7 +10,7 @@ void drawText(float x, float y, char *string)
     glRasterPos2f(x, y);
     for(c=string;*c!='\0';c++)
     {
-        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, *c);
+        glutStrokeCharacter(GLUT_STROKE_ROMAN, *c);
     }
 
     glFlush();

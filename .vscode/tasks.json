@@ -25,6 +25,12 @@
             "command": "echo \"//nvcc SeayJohnnyHW${input:hwNum}.cu -o SeayJohnnyHW${input:hwNum} ${input:lnkArgs}\" >> ./wip/SeayJohnnyHW${input:hwNum}.cu",
             "problemMatcher": []
         },
+        {
+            "label": "cudaDebug",
+            "type": "shell",
+            "command": "nvcc -lineinfo '${file}' -o ./exec/${fileBasenameNoExtension} -lglut -lGL -lm ; cuda-memcheck ./exec/'${fileBasenameNoExtension}' |more",
+            "problemMatcher": []
+        },
     ],
     "inputs": [
         {
