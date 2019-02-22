@@ -138,7 +138,7 @@ void normalizeCircles(RunState* rs)
 
 int main(int argc, char** argv)
 {
-    int n = getNumberOfNodes("./datasets/att48/coords.txt");
+    int n = getNumberOfNodes("./datasets/pres8/coords.txt");
     if(n!=N) return 1;
 
     for(int r = 0; r < 1;r++)
@@ -149,13 +149,13 @@ int main(int argc, char** argv)
         cudaMalloc(&d_rs, sizeof(RunState));
 
         h_rs.numberOfNodes = n;
-        h_rs.m = -0.1;
+        h_rs.m = -0.001;
         h_rs.p = 5.0;
         h_rs.q = 7.0;
         h_rs.damp = 20.0;
         h_rs.mass = 80.0;
         h_rs.lowerPressureLimit = 0.5;
-        h_rs.upperPressureLimit = 2.0;
+        h_rs.upperPressureLimit = 1.0;
         h_rs.innerWall = WallDefault;
         h_rs.innerWall.direction = 1;
         h_rs.outerWall = WallDefault;
@@ -166,10 +166,12 @@ int main(int argc, char** argv)
 
 
 
-        loadNodes(h_rs.nodes, "./datasets/att48/coords.txt");
-        loadNodes(o_rs.nodes, "./datasets/att48/coords.txt");
+        //loadNodes(h_rs.nodes, "./datasets/att48/coords.txt");
+        //loadNodes(o_rs.nodes, "./datasets/att48/coords.txt");
         //loadNodes(h_rs.nodes, "./datasets/rand8/coords.txt");
         //loadNodes(o_rs.nodes, "./datasets/rand8/coords.txt");
+        loadNodes(h_rs.nodes, "./datasets/pres8/coords.txt");
+        loadNodes(o_rs.nodes, "./datasets/pres8/coords.txt");
         
         shiftNodes(h_rs.nodes, n, getGeometricCenter(h_rs.nodes, n)*(-1.0));
         normalizeNodePositions(h_rs.nodes, n);
@@ -186,7 +188,7 @@ int main(int argc, char** argv)
         float innerRadius = 0.0;
         float outerRadius = 1.0;
         float dt = 0.001;
-        float dr = outerRadius/100000;
+        float dr = outerRadius/10000;
         float t = 0.0;
         int drawCount = 0;
         while(innerRadius < outerRadius-dr)
@@ -194,15 +196,15 @@ int main(int argc, char** argv)
             t = 0.0;
             while(t < 1.0)
             {
-                adjustForPressure<<<1,1>>>(d_rs);
+                //adjustForPressure<<<1,1>>>(d_rs);
                 nBodyStep<<<1,n>>>(d_rs, dt, dr);
                 t += dt;
                 if(drawCount == 100 && DRAW)
                 {
                     cudaMemcpy(&h_rs, d_rs, sizeof(RunState), cudaMemcpyDeviceToHost); //TODO: Stream this maybe
                     cudaDeviceSynchronize();
-                    //normalizeNodePositions(h_rs.nodes, n);
-                    //normalizeCircles(&h_rs);
+                    normalizeNodePositions(h_rs.nodes, n);
+                    normalizeCircles(&h_rs);
                     if(getWindowState()) nBodyRenderUpdate(h_rs);
                     drawCount = 0;
                 }

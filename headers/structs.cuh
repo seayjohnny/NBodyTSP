@@ -1,6 +1,6 @@
 #pragma once
 
-#define N 48
+#define N 8
 #include "node.cuh"
 
 struct Wall
