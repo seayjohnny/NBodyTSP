@@ -27,6 +27,8 @@ float LightGray1[3] = {206.0/255.0, 206.0/255.0, 206.0/255.0};
 float LightGray2[3] = {188.0/255.0, 188.0/255.0, 188.0/255.0};
 float DarkGray2[3] = {50.0/255.0, 50.0/255.0, 50.0/255.0};
 float DarkGray3[3] = {89.0/255.0, 89.0/255.0, 89.0/255.0};
+float Green[3] = {66.0/255.0, 244.0/255.0, 143.0/255.0};
+float Red[3] = {244.0/255.0, 65.0/255.0, 65.0/255.0};
 
 void drawGrid(float dx, float dy, float gridLineColor[3], float xAxisColor[3], float yAxisColor[3])
 {
@@ -123,6 +125,10 @@ void info()
         drawText(-0.9, y, s);
     }
 
+    char pressureText[MAX_STRING];
+    sprintf(pressureText, "pressure: %f", rs.pressure);
+    drawText(-0.9, -0.9, pressureText);
+
     glutSwapBuffers();
 }
 
@@ -137,8 +143,28 @@ void render()
     linearScalePoints(p, N, scale);
     drawGrid(dx, dy, LightGray1, LightGray2, LightGray2);
     float2 center = {0,0};
-    drawCircle(center, rs.outerWall.radius*0.9, 100, rs.outerWall.thickness, DarkGray2);
-    drawCircle(center, rs.innerWall.radius*0.9, 100, rs.innerWall.thickness, DarkGray2);
+    float innerCircleColor[3];
+    float outerCircleColor[3];
+    if(rs.innerWall.direction){ for(int i = 0;i<3;i++) innerCircleColor[i] = Green[i];}
+    else { for(int i = 0;i<3;i++) innerCircleColor[i] = DarkGray2[i]; }
+
+    switch(rs.outerWall.direction)
+    {
+        case -1:
+            for(int i = 0;i<3;i++) outerCircleColor[i] = Red[i];
+            break;
+        case 0:
+            for(int i = 0;i<3;i++) outerCircleColor[i] = DarkGray2[i];
+            break;
+        case 1:
+            for(int i = 0;i<3;i++) outerCircleColor[i] = Green[i];
+            break;
+        default:
+            for(int i = 0;i<3;i++) outerCircleColor[i] = DarkGray2[i];
+            break;
+    }
+    drawCircle(center, rs.outerWall.radius*0.9, 100, rs.outerWall.thickness, outerCircleColor);
+    drawCircle(center, rs.innerWall.radius*0.9, 100, rs.innerWall.thickness, innerCircleColor);
     drawPoints(p, N, 10.0, DarkGray3);
     glutSwapBuffers();
 }
@@ -152,7 +178,7 @@ void drawPath()
     glClear(GL_COLOR_BUFFER_BIT);
     getNodeInitPositions(p, rs.nodes, N);
     linearScalePoints(p, N, scale);
-    drawGrid(dx, dy, NULL, NULL, NULL);
+    drawGrid(dx, dy, LightGray1, LightGray2, LightGray2);
 
     glLineWidth(2.0);
     glColor3f(1.0, 0.3, 0.3);

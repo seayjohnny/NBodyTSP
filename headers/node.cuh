@@ -114,6 +114,7 @@ void normalizeNodePositions(Node* nodes, int n)
     {
         nodes[i].pos /= m;
     }
+
 }
 
 void resetNodeInitPositions(Node* nodes, int n)

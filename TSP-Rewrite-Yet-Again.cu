@@ -15,7 +15,44 @@
 
 #define DRAW 1
 
-__global__ void nBodyStep(RunState* rs, float dt, float innerRadius)
+__host__ __device__ float getPressure(RunState* rs)
+{
+    int i;
+    float sum, temp;
+    
+    sum = 0.0;
+    for(i = 0; i<rs->numberOfNodes;i++)
+    {
+        temp = mag(rs->nodes[i].pos) - rs->outerWall.radius;
+        if(0 < temp)
+        {
+            sum += temp;
+        }
+    }
+    return(sum*(rs->outerWall.strength)/(2.0*PI*rs->outerWall.radius)); //PI is defined in vecmath.cuh
+}
+
+__global__ void adjustForPressure(RunState* rs)
+{
+    rs->pressure = getPressure(rs);
+    if(rs->pressure < rs->lowerPressureLimit)
+    {
+        rs->innerWall.direction = 0;
+        rs->outerWall.direction = -1;
+    }
+    else if(rs->pressure < rs->upperPressureLimit)
+    {
+        rs->innerWall.direction = 1;
+        rs->outerWall.direction = 0;
+    } 
+    else
+    {
+        rs->innerWall.direction = 0;
+        rs->outerWall.direction = 1;
+    }
+}
+
+__global__ void nBodyStep(RunState* rs, float dt, float dr)
 {
     __shared__ float2 shPos[N], shInitPos[N];
     float d, edgeLength;
@@ -70,8 +107,33 @@ __global__ void nBodyStep(RunState* rs, float dt, float innerRadius)
 
     if(id == 0)
     {
-        rs->innerWall.radius = innerRadius;
+        rs->innerWall.radius += dr*rs->innerWall.direction;
+        rs->outerWall.radius += dr*rs->outerWall.direction;
     }
+}
+
+float getPathCost(RunState rs, RunState os)
+{
+    float cost;
+    float dx, dy;
+    int n = rs.numberOfNodes;
+
+    for(int i = 0; i < n; i++)
+    {
+        dx = os.nodes[rs.nBodyPath[i%n]].initpos.x - os.nodes[rs.nBodyPath[(i+1)%n]].initpos.x;
+        dy = os.nodes[rs.nBodyPath[i%n]].initpos.y - os.nodes[rs.nBodyPath[(i+1)%n]].initpos.y;
+        cost += sqrt(dx*dx + dy*dy);
+    }
+
+    return cost;
+}
+
+void normalizeCircles(RunState* rs)
+{
+    float factor = rs->outerWall.radius;
+
+    rs->innerWall.radius /= factor;
+    rs->outerWall.radius /= factor;
 }
 
 int main(int argc, char** argv)
@@ -81,28 +143,34 @@ int main(int argc, char** argv)
 
     for(int r = 0; r < 1;r++)
     {
+        RunState o_rs;
         RunState h_rs;
         RunState* d_rs;
         cudaMalloc(&d_rs, sizeof(RunState));
 
         h_rs.numberOfNodes = n;
-        h_rs.m = -0.0015;
+        h_rs.m = -0.1;
         h_rs.p = 5.0;
         h_rs.q = 7.0;
         h_rs.damp = 20.0;
         h_rs.mass = 80.0;
-        h_rs.lowerPressureLimit = 500;
-        h_rs.upperPressureLimit = 1000;
+        h_rs.lowerPressureLimit = 0.5;
+        h_rs.upperPressureLimit = 2.0;
         h_rs.innerWall = WallDefault;
+        h_rs.innerWall.direction = 1;
         h_rs.outerWall = WallDefault;
         h_rs.outerWall.radius = 1.0;
+        h_rs.outerWall.direction = 0;
         h_rs.progress = 0.0;
 
 
 
 
         loadNodes(h_rs.nodes, "./datasets/att48/coords.txt");
-
+        loadNodes(o_rs.nodes, "./datasets/att48/coords.txt");
+        //loadNodes(h_rs.nodes, "./datasets/rand8/coords.txt");
+        //loadNodes(o_rs.nodes, "./datasets/rand8/coords.txt");
+        
         shiftNodes(h_rs.nodes, n, getGeometricCenter(h_rs.nodes, n)*(-1.0));
         normalizeNodePositions(h_rs.nodes, n);
         resetNodeInitPositions(h_rs.nodes, n);
@@ -117,30 +185,39 @@ int main(int argc, char** argv)
 
         float innerRadius = 0.0;
         float outerRadius = 1.0;
-        float dt = 0.01;
-        float dr = outerRadius/1000;
+        float dt = 0.001;
+        float dr = outerRadius/100000;
         float t = 0.0;
         int drawCount = 0;
         while(innerRadius < outerRadius-dr)
         {
-            innerRadius += dr;
             t = 0.0;
             while(t < 1.0)
             {
-                nBodyStep<<<1,n>>>(d_rs, dt, innerRadius);
+                adjustForPressure<<<1,1>>>(d_rs);
+                nBodyStep<<<1,n>>>(d_rs, dt, dr);
                 t += dt;
                 if(drawCount == 100 && DRAW)
                 {
                     cudaMemcpy(&h_rs, d_rs, sizeof(RunState), cudaMemcpyDeviceToHost); //TODO: Stream this maybe
                     cudaDeviceSynchronize();
+                    //normalizeNodePositions(h_rs.nodes, n);
+                    //normalizeCircles(&h_rs);
                     if(getWindowState()) nBodyRenderUpdate(h_rs);
                     drawCount = 0;
                 }
                 if(DRAW) drawCount++;
             }
-
+            cudaMemcpy(&innerRadius, &d_rs->innerWall.radius, sizeof(float), cudaMemcpyDeviceToHost);
+            cudaMemcpy(&outerRadius, &d_rs->outerWall.radius, sizeof(float), cudaMemcpyDeviceToHost);
         }
         getNBodyPath(h_rs.nBodyPath, h_rs.nodes, n);
+        float cost = getPathCost(h_rs, o_rs);
+        float actualCost = 33523.708;
+        float percentDiff = 100*(cost - actualCost)/actualCost;
+        printf("N-body path cost: %f\n", cost);
+        printf("Optimal path cost: %f\n", actualCost);
+        printf("Percent difference: %f%%\n", percentDiff);
         if(DRAW) while(getWindowState()) nBodyDrawPath(h_rs);
     }
 

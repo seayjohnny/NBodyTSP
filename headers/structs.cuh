@@ -25,6 +25,7 @@ struct RunState
     float damp;
     float mass;
     
+    float pressure;
     float lowerPressureLimit;
     float upperPressureLimit;
 
