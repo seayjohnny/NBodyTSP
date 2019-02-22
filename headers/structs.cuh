@@ -1,15 +1,17 @@
 #pragma once
 
-#define N 8
+#define N 48
+#define B 8
 #include "node.cuh"
 
 struct Wall
 {
+    float2 center;
     double strength;
     int direction;
     float radius;
     float thickness;
-} WallDefault = {5000.0, 0, 0, 3.0};
+} WallDefault = {make_float2(0,0), 0.0, 0, 0, 3.0};
 
 struct RunState
 {
@@ -33,6 +35,11 @@ struct RunState
 
     Wall innerWall;
     Wall outerWall;
+
+    Wall bubbles[B*B];
+    int densities[B*B];
+    float2 densityCenters[B*B];
+    float range[B+1];
 
     float progress;
 };

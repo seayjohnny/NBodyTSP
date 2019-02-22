@@ -7,7 +7,7 @@
 #include "./headers/drawing.h"
 #include "./headers/arrays.h"
 
-#define DIM 1024
+#define DIM 768
 #define BLOCK 1024
 
 
@@ -30,7 +30,7 @@
 
 #define DRAW 1
 
-OutputParameters params;
+OutputParametersSpring params;
 
 int numberOfNodes = getNumberOfLines(FP);
 float2 *orginalCoords = (float2*)malloc((numberOfNodes)*sizeof(float2));
@@ -57,6 +57,15 @@ int mouse_x, mouse_y;
 int displayFlag = 0;
 int extrustionFlag = 0;
 double timer;
+
+float Aged[3] = {1.0, 253.0/255.0, 240.0/255.0};
+float LightGray0[3] = {220.0/255.0, 220.0/255.0, 220.0/255.0};
+float LightGray1[3] = {206.0/255.0, 206.0/255.0, 206.0/255.0};
+float LightGray2[3] = {188.0/255.0, 188.0/255.0, 188.0/255.0};
+float DarkGray2[3] = {50.0/255.0, 50.0/255.0, 50.0/255.0};
+float DarkGray3[3] = {89.0/255.0, 89.0/255.0, 89.0/255.0};
+float Green[3] = {66.0/255.0, 244.0/255.0, 143.0/255.0};
+float Red[3] = {244.0/255.0, 65.0/255.0, 65.0/255.0};
 
 void drawNBodyExtrusion(float2* pos, float innerRadius, float outerRadius, int innerDirection, int outterDirection, int n);
 void drawDensity(int *density, float2 *densityCenters, float *range, int b);
@@ -493,9 +502,9 @@ double nBodyExtrustionTSP(float2* nodes, float2* pos, float2* vel, float2* acc, 
     drawDensity(density, densityCenters, range, b);
     drawBubbles(bubbles, b, outerRadius);
     drawNBodyExtrusion(pos, innerRadius, outerRadius, 0, 0, n);
-    //printf("\n\t--- Paused for initial display. Press ENTER to continue. ---");
+    printf("\n\t--- Paused for initial display. Press ENTER to continue. ---");
     if(DRAW) glutSwapBuffers();
-    //getchar();
+    getchar();
     
     outerWallDirection = -1;
     innerWallDirection = 0;
@@ -652,13 +661,32 @@ void drawNBodyExtrusion(float2* pos, float innerRadius, float outerRadius, int i
     innerRadius /= normFactor;
 
     
-    float innerCircleColor[] = {0.88, 0.61, 0.0};
-    float outerCircleColor[] = {0.88, 0.20, 0.0};
+    float innerCircleColor[3];
+    float outerCircleColor[3];
+    if(innerDirection){ for(int i = 0;i<3;i++) innerCircleColor[i] = Green[i];}
+    else { for(int i = 0;i<3;i++) innerCircleColor[i] = LightGray2[i]; }
+
+    switch(outterDirection)
+    {
+        case -1:
+            for(int i = 0;i<3;i++) outerCircleColor[i] = Red[i];
+            break;
+        case 0:
+            for(int i = 0;i<3;i++) outerCircleColor[i] = LightGray2[i];
+            break;
+        case 1:
+            for(int i = 0;i<3;i++) outerCircleColor[i] = Green[i];
+            break;
+        default:
+            for(int i = 0;i<3;i++) outerCircleColor[i] = LightGray2[i];
+            break;
+    }
+
     linearScalePoints(pos, n, 1/normFactor);
 
     if(DRAW){
-        drawCircle(center, innerRadius, lineAmount, 2.0, innerCircleColor);
-        drawCircle(center, outerRadius, lineAmount, 2.0, outerCircleColor);
+        drawCircle(center, innerRadius, lineAmount, 3.0, innerCircleColor);
+        drawCircle(center, outerRadius, lineAmount, 3.0, outerCircleColor);
         drawPoints(pos, n, 5.0, NULL);
     }
 
@@ -730,7 +758,7 @@ void display()
         params.percentDiff = percentDiff;
         params.drawn = DRAW;
         params.runTime = timer;
-        logRun(FP_LOG, params);
+        logSpringRun(FP_LOG, params);
         printf("\t🗹  Logged run parameters and results to %s\n", FP_LOG);
 
         extrustionFlag = 1;

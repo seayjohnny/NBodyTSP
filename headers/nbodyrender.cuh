@@ -23,6 +23,7 @@ int clicked = 0;
 float scale = 0.9;
 
 float Aged[3] = {1.0, 253.0/255.0, 240.0/255.0};
+float LightGray0[3] = {220.0/255.0, 220.0/255.0, 220.0/255.0};
 float LightGray1[3] = {206.0/255.0, 206.0/255.0, 206.0/255.0};
 float LightGray2[3] = {188.0/255.0, 188.0/255.0, 188.0/255.0};
 float DarkGray2[3] = {50.0/255.0, 50.0/255.0, 50.0/255.0};
@@ -61,6 +62,15 @@ void drawGrid(float dx, float dy, float gridLineColor[3], float xAxisColor[3], f
     //glFlush();
 }
 
+void drawPoint(float2 point, float size, float color[3])
+{
+    glPointSize(size+10);
+    (color==NULL) ? glColor3f(1.0, 1.0, 1.0):glColor3f(color[0], color[1], color[2]);
+    glBegin(GL_POINTS);
+    glVertex2f(point.x,point.y);
+    glEnd();
+}
+
 void drawPoints(float2* points, int n, float pointSize, float color[3])
 {
     glPointSize(pointSize);
@@ -74,9 +84,9 @@ void drawPoints(float2* points, int n, float pointSize, float color[3])
 
 }
 
-void drawRect(float2 pos, float2 dim)
+void drawRect(float2 pos, float2 dim, float shade)
 {
-    glColor3f(0.31, 0.176, 0.5);
+    glColor3f(0.31*shade, 0.176*shade, 0.5*shade);
     glBegin(GL_POLYGON);
     glVertex2f(pos.x, pos.y);
     glVertex2f(pos.x+dim.x, pos.y);
@@ -112,6 +122,38 @@ void drawText(float x, float y, char string[MAX_STRING])
     glPopMatrix();
 }
 
+void drawDensity(int *density, float2 *densityCenters, float *range, int b, int n)
+{
+    for(int i = 0; i < b*b; i++)
+    {
+        if(density[i])
+        {
+            float xr[2] = {range[i%b], range[i%b+1]};
+            float yr[2] = {range[b-1-i/b], range[b-1-i/b+1]};
+
+            drawRect(make_float2(xr[0], yr[0]), make_float2(xr[1]-xr[0], yr[1]-yr[0]), ((float)density[i])/sqrtf(n));
+
+        }
+    }
+    linearScalePoints(rs.densityCenters, B*B, scale);
+    for(int i = 0; i < b*b; i++)
+    {
+        if(density[i])
+        {
+            float color[] = {0.3, 0.3, 1.0}; 
+            drawPoint(densityCenters[i], 2.0, color);
+        }
+    }
+}
+
+void drawBubbles(Wall bubbles[B*B])
+{
+    for(int i = 0; i < B*B;i++)
+    {
+        if(bubbles[i].strength != 0) drawCircle(bubbles[i].center, bubbles[i].radius, 100, bubbles[i].thickness, Red);
+    }
+}
+
 void info()
 {
     glutSetWindow(windowId1);
@@ -141,12 +183,16 @@ void render()
     glClear(GL_COLOR_BUFFER_BIT);
     getNodePositions(p, rs.nodes, N);
     linearScalePoints(p, N, scale);
-    drawGrid(dx, dy, LightGray1, LightGray2, LightGray2);
+    //linspace(rs.range, -scale, scale, B+1, 1);
+    drawDensity(rs.densities, rs.densityCenters, rs.range, B, rs.numberOfNodes);
+    linearScalePoints(rs.densityCenters, B*B, scale);
+
+    //drawGrid(dx, dy, LightGray1, LightGray2, LightGray2);
     float2 center = {0,0};
     float innerCircleColor[3];
     float outerCircleColor[3];
-    if(rs.innerWall.direction){ for(int i = 0;i<3;i++) innerCircleColor[i] = Green[i];}
-    else { for(int i = 0;i<3;i++) innerCircleColor[i] = DarkGray2[i]; }
+    if(rs.innerWall.direction){ for(int i = 0;i<3;i++) innerCircleColor[i] = LightGray2[i];}
+    else { for(int i = 0;i<3;i++) innerCircleColor[i] = LightGray2[i]; }
 
     switch(rs.outerWall.direction)
     {
@@ -154,18 +200,25 @@ void render()
             for(int i = 0;i<3;i++) outerCircleColor[i] = Red[i];
             break;
         case 0:
-            for(int i = 0;i<3;i++) outerCircleColor[i] = DarkGray2[i];
+            for(int i = 0;i<3;i++) outerCircleColor[i] = LightGray2[i];
             break;
         case 1:
             for(int i = 0;i<3;i++) outerCircleColor[i] = Green[i];
             break;
         default:
-            for(int i = 0;i<3;i++) outerCircleColor[i] = DarkGray2[i];
+            for(int i = 0;i<3;i++) outerCircleColor[i] = LightGray2[i];
             break;
     }
     drawCircle(center, rs.outerWall.radius*0.9, 100, rs.outerWall.thickness, outerCircleColor);
     drawCircle(center, rs.innerWall.radius*0.9, 100, rs.innerWall.thickness, innerCircleColor);
-    drawPoints(p, N, 10.0, DarkGray3);
+
+    for(int i = 0; i < B*B;i++)
+    {
+        linearScalePoint(&rs.bubbles[i].center, scale);
+
+    }
+    drawBubbles(rs.bubbles);
+    drawPoints(p, N, 10.0, LightGray0);
     glutSwapBuffers();
 }
 
@@ -178,7 +231,7 @@ void drawPath()
     glClear(GL_COLOR_BUFFER_BIT);
     getNodeInitPositions(p, rs.nodes, N);
     linearScalePoints(p, N, scale);
-    drawGrid(dx, dy, LightGray1, LightGray2, LightGray2);
+    //drawGrid(dx, dy, LightGray1, LightGray2, LightGray2);
 
     glLineWidth(2.0);
     glColor3f(1.0, 0.3, 0.3);
@@ -189,7 +242,7 @@ void drawPath()
     }
     glVertex2f(p[rs.nBodyPath[0]].x, p[rs.nBodyPath[0]].y);
     glEnd();
-    drawPoints(p, N, 10.0, DarkGray3);
+    drawPoints(p, N, 10.0, LightGray0);
     glutSwapBuffers();
 }
 
@@ -220,8 +273,9 @@ void nBodyRenderInit(int argc, char** argv, RunState runState)
     glutIdleFunc(render);
     glutCloseFunc(close);
     glutMouseFunc(mouse);
-    glClearColor(Aged[0], Aged[1], Aged[2], 1.0);
-
+    //glClearColor(Aged[0], Aged[1], Aged[2], 1.0);
+    glClearColor(0.262745, 0.262745, 0.262745, 1.0);
+    
     glutInitWindowSize(256,768);
     glutInitWindowPosition(glutGet(GLUT_WINDOW_X)+DIM, glutGet(GLUT_WINDOW_Y));
     glutCreateWindow("Info");

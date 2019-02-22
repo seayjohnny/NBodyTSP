@@ -5,6 +5,7 @@
 #include "./headers/dataio.cuh"
 #include "./headers/lintrans.cuh"
 #include "./headers/structs.cuh"
+#include "./headers/arrays.h"
 #include "./headers/nbodyrender.cuh"
 
 //TODO : nbodyrender.h
@@ -14,6 +15,56 @@
 #define FORCE_CUTOFF 100.0
 
 #define DRAW 1
+
+__global__ void initBubbles(RunState* rs)
+{
+    int x = threadIdx.x + blockIdx.x*blockDim.x;
+    int y = threadIdx.y + blockIdx.y*blockDim.y;
+    int id = x + y*gridDim.x*blockDim.x;
+
+    if(rs->densities[id] > 3)
+    {
+        rs->bubbles[id].center = rs->densityCenters[id];
+        rs->bubbles[id].strength = 5000.0;
+    }
+}
+
+__global__ void getDensity(RunState* rs)
+{
+    int x = threadIdx.x + blockIdx.x*blockDim.x;
+    int y = threadIdx.y + blockIdx.y*blockDim.y;
+    int id = x + y*gridDim.x*blockDim.x;
+
+    float xr[2] = {rs->range[blockIdx.x], rs->range[blockIdx.x+1]};
+    float yr[2] = {rs->range[B-1-blockIdx.y], rs->range[B-1-blockIdx.y+1]};
+    float xBar = 0.0;
+    float yBar = 0.0;
+    if(id == 0){
+        for(int i = 0; i < B*B; i++)
+        {
+            rs->densities[i] = 0;
+        }
+    }
+    __syncthreads();
+
+    for(int i = 0; i < rs->numberOfNodes; i++)
+    {
+        if(rs->nodes[i].pos.x >= xr[0] && rs->nodes[i].pos.x <= xr[1])
+        {
+            if(rs->nodes[i].pos.y >= yr[0] && rs->nodes[i].pos.y <= yr[1])
+            {
+                rs->densities[id] += 1;
+                xBar += rs->nodes[i].pos.x;
+                yBar += rs->nodes[i].pos.y;
+            }
+        }
+    }
+    if(rs->densities[id])
+    {
+        rs->densityCenters[id].x = xBar/rs->densities[id];
+        rs->densityCenters[id].y = yBar/rs->densities[id];
+    }
+}
 
 __host__ __device__ float getPressure(RunState* rs)
 {
@@ -95,11 +146,28 @@ __global__ void nBodyStep(RunState* rs, float dt, float dr)
             force += make_float2(forceMag*pos.x/radius, forceMag*pos.y/radius);
         }
 
+        for(int i = 0; i < B*B;i++)
+        {
+            if(rs->bubbles[i].strength != 0)
+            {
+                float d = dist(rs->bubbles[i].center, pos);
+                if(d < rs->bubbles[i].radius)
+                {
+                    forceMag = rs->bubbles[i].strength*(rs->bubbles[i].radius - d);
+                    force += make_float2(forceMag*pos.x/d, forceMag*pos.y/d);
+                }
+            }
+        }
+
+
         force += make_float2(-rs->damp*rs->nodes[id].vel.x, -rs->damp*rs->nodes[id].vel.y);
         if(force.x > FORCE_CUTOFF) force.x = 0;
         if(force.y > FORCE_CUTOFF) force.y = 0;
         rs->nodes[id].acc = force/rs->nodes[id].mass;
        
+
+
+
         __syncthreads();
         rs->nodes[id].vel += rs->nodes[id].acc*dt;
         rs->nodes[id].pos += rs->nodes[id].vel*dt;
@@ -109,6 +177,15 @@ __global__ void nBodyStep(RunState* rs, float dt, float dr)
     {
         rs->innerWall.radius += dr*rs->innerWall.direction;
         rs->outerWall.radius += dr*rs->outerWall.direction;
+        for(int i = 0; i < B*B;i++)
+        {
+            float d = mag(rs->bubbles[i].center) + rs->bubbles[i].radius;
+
+            if(rs->bubbles[i].strength != 0 && d <=rs->outerWall.radius) 
+            {
+                rs->bubbles[i].radius += dr*rs->innerWall.direction;
+            }
+        }
     }
 }
 
@@ -138,7 +215,7 @@ void normalizeCircles(RunState* rs)
 
 int main(int argc, char** argv)
 {
-    int n = getNumberOfNodes("./datasets/pres8/coords.txt");
+    int n = getNumberOfNodes("./datasets/att48/coords.txt");
     if(n!=N) return 1;
 
     for(int r = 0; r < 1;r++)
@@ -149,46 +226,61 @@ int main(int argc, char** argv)
         cudaMalloc(&d_rs, sizeof(RunState));
 
         h_rs.numberOfNodes = n;
-        h_rs.m = -0.001;
+        h_rs.m = -0.0015;
         h_rs.p = 5.0;
         h_rs.q = 7.0;
         h_rs.damp = 20.0;
         h_rs.mass = 80.0;
-        h_rs.lowerPressureLimit = 0.5;
-        h_rs.upperPressureLimit = 1.0;
+        h_rs.lowerPressureLimit = 250.0;
+        h_rs.upperPressureLimit = 500.0;
         h_rs.innerWall = WallDefault;
         h_rs.innerWall.direction = 1;
+        h_rs.innerWall.strength = 5000.0;
         h_rs.outerWall = WallDefault;
         h_rs.outerWall.radius = 1.0;
         h_rs.outerWall.direction = 0;
+        h_rs.outerWall.strength = 5000.0;
         h_rs.progress = 0.0;
+        linspace(h_rs.range, -1.0, 1.0, B+1, 1);
 
+        for(int i = 0; i < B*B; i++)
+        {
+            h_rs.bubbles[i] = WallDefault;
+        }
+        
 
-
-
-        //loadNodes(h_rs.nodes, "./datasets/att48/coords.txt");
-        //loadNodes(o_rs.nodes, "./datasets/att48/coords.txt");
+        loadNodes(h_rs.nodes, "./datasets/att48/coords.txt");
+        loadNodes(o_rs.nodes, "./datasets/att48/coords.txt");
         //loadNodes(h_rs.nodes, "./datasets/rand8/coords.txt");
         //loadNodes(o_rs.nodes, "./datasets/rand8/coords.txt");
-        loadNodes(h_rs.nodes, "./datasets/pres8/coords.txt");
-        loadNodes(o_rs.nodes, "./datasets/pres8/coords.txt");
+        //loadNodes(h_rs.nodes, "./datasets/pres8/coords.txt");
+        //loadNodes(o_rs.nodes, "./datasets/pres8/coords.txt");
         
         shiftNodes(h_rs.nodes, n, getGeometricCenter(h_rs.nodes, n)*(-1.0));
         normalizeNodePositions(h_rs.nodes, n);
         resetNodeInitPositions(h_rs.nodes, n);
-        
+
+        dim3 grid;
+        grid.x = B;
+        grid.y = B;
+        grid.z = 1;
+
+        cudaMemcpy(d_rs, &h_rs, sizeof(RunState), cudaMemcpyHostToDevice);
+        getDensity<<<grid, 1>>>(d_rs);
+        initBubbles<<<grid, 1>>>(d_rs);
+        cudaMemcpy(&h_rs, d_rs, sizeof(RunState), cudaMemcpyDeviceToHost);
         if(DRAW)
         {
             nBodyRenderInit(argc, argv, h_rs);
             while(waitForMouseClick());
         }
         
-        cudaMemcpy(d_rs, &h_rs, sizeof(RunState), cudaMemcpyHostToDevice);
+
 
         float innerRadius = 0.0;
         float outerRadius = 1.0;
         float dt = 0.001;
-        float dr = outerRadius/10000;
+        float dr = outerRadius/100000;
         float t = 0.0;
         int drawCount = 0;
         while(innerRadius < outerRadius-dr)
@@ -196,7 +288,8 @@ int main(int argc, char** argv)
             t = 0.0;
             while(t < 1.0)
             {
-                //adjustForPressure<<<1,1>>>(d_rs);
+                getDensity<<<grid, 1>>>(d_rs);
+                adjustForPressure<<<1,1>>>(d_rs);
                 nBodyStep<<<1,n>>>(d_rs, dt, dr);
                 t += dt;
                 if(drawCount == 100 && DRAW)
