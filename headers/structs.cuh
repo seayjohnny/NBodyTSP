@@ -40,6 +40,28 @@ struct RunState
     int densities[B*B];
     float2 densityCenters[B*B];
     float range[B+1];
+    int bubbleFlag;
+
+    float factor;
 
     float progress;
+    double runTime;
+
+    double optimalCost;
+    double nbodyCost;
+    double percentDiff;
+
+    int drawn;
+};
+
+struct ConstantParameters
+{
+    float damp;
+    float mass;
+    
+    float wallStrength;
+    float forceCutoff;
+
+    float dr;
+    float dt;
 };

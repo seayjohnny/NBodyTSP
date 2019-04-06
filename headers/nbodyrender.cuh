@@ -30,6 +30,9 @@ float DarkGray2[3] = {50.0/255.0, 50.0/255.0, 50.0/255.0};
 float DarkGray3[3] = {89.0/255.0, 89.0/255.0, 89.0/255.0};
 float Green[3] = {66.0/255.0, 244.0/255.0, 143.0/255.0};
 float Red[3] = {244.0/255.0, 65.0/255.0, 65.0/255.0};
+float Blue[3] = {109.0/255.0, 158.0/255.0, 235.0/255.0};
+float White[3] = {1.0, 1.0, 1.0};
+float Black[3] = {0.0, 0.0, 0.0};
 
 void drawGrid(float dx, float dy, float gridLineColor[3], float xAxisColor[3], float yAxisColor[3])
 {
@@ -135,7 +138,7 @@ void drawDensity(int *density, float2 *densityCenters, float *range, int b, int 
 
         }
     }
-    linearScalePoints(rs.densityCenters, B*B, scale);
+    // linearScalePoints(rs.densityCenters, B*B, scale);
     for(int i = 0; i < b*b; i++)
     {
         if(density[i])
@@ -150,7 +153,7 @@ void drawBubbles(Wall bubbles[B*B])
 {
     for(int i = 0; i < B*B;i++)
     {
-        if(bubbles[i].strength != 0) drawCircle(bubbles[i].center, bubbles[i].radius, 100, bubbles[i].thickness, Red);
+        if(bubbles[i].strength != 0) drawCircle(bubbles[i].center, bubbles[i].radius*scale, 100, bubbles[i].thickness, Blue);
     }
 }
 
@@ -176,22 +179,20 @@ void info()
 
 void render()
 {
-    float dx = 0.1;
-    float dy = 0.1;
-
     glutSetWindow(windowId0);
     glClear(GL_COLOR_BUFFER_BIT);
     getNodePositions(p, rs.nodes, N);
     linearScalePoints(p, N, scale);
-    //linspace(rs.range, -scale, scale, B+1, 1);
-    drawDensity(rs.densities, rs.densityCenters, rs.range, B, rs.numberOfNodes);
+    linspace(rs.range, -scale, scale, B+1, 1);
     linearScalePoints(rs.densityCenters, B*B, scale);
+    drawDensity(rs.densities, rs.densityCenters, rs.range, B, rs.numberOfNodes);
 
-    //drawGrid(dx, dy, LightGray1, LightGray2, LightGray2);
+
+    // drawGrid(dx, dy, LightGray1, LightGray2, LightGray2);
     float2 center = {0,0};
     float innerCircleColor[3];
     float outerCircleColor[3];
-    if(rs.innerWall.direction){ for(int i = 0;i<3;i++) innerCircleColor[i] = LightGray2[i];}
+    if(rs.innerWall.direction){ for(int i = 0;i<3;i++) innerCircleColor[i] = Green[i];}
     else { for(int i = 0;i<3;i++) innerCircleColor[i] = LightGray2[i]; }
 
     switch(rs.outerWall.direction)
@@ -206,11 +207,11 @@ void render()
             for(int i = 0;i<3;i++) outerCircleColor[i] = Green[i];
             break;
         default:
-            for(int i = 0;i<3;i++) outerCircleColor[i] = LightGray2[i];
+            for(int i = 0;i<3;i++) outerCircleColor[i] = Green[i];
             break;
     }
-    drawCircle(center, rs.outerWall.radius*0.9, 100, rs.outerWall.thickness, outerCircleColor);
-    drawCircle(center, rs.innerWall.radius*0.9, 100, rs.innerWall.thickness, innerCircleColor);
+    drawCircle(center, rs.outerWall.radius*scale, 100, rs.outerWall.thickness, outerCircleColor);
+    drawCircle(center, rs.innerWall.radius*scale, 100, rs.innerWall.thickness, innerCircleColor);
 
     for(int i = 0; i < B*B;i++)
     {
@@ -224,9 +225,6 @@ void render()
 
 void drawPath()
 {
-    float dx = 0.1;
-    float dy = 0.1;
-
     glutSetWindow(windowId0);
     glClear(GL_COLOR_BUFFER_BIT);
     getNodeInitPositions(p, rs.nodes, N);
@@ -274,7 +272,8 @@ void nBodyRenderInit(int argc, char** argv, RunState runState)
     glutCloseFunc(close);
     glutMouseFunc(mouse);
     //glClearColor(Aged[0], Aged[1], Aged[2], 1.0);
-    glClearColor(0.262745, 0.262745, 0.262745, 1.0);
+    glClearColor(0.1725490196, 0.1725490196, 0.1725490196, 1.0);
+    // glClearColor(1.0, 1.0, 1.0, 1.0);
     
     glutInitWindowSize(256,768);
     glutInitWindowPosition(glutGet(GLUT_WINDOW_X)+DIM, glutGet(GLUT_WINDOW_Y));
@@ -282,7 +281,7 @@ void nBodyRenderInit(int argc, char** argv, RunState runState)
     windowId1 = glutGetWindow();
     glutDisplayFunc(info);
 
-    glClearColor(0.2, 0.2, 0.2, 1.0);
+    glClearColor(0.1725, 0.1725, 0.1725, 1.0);
     glEnable(GL_MULTISAMPLE_ARB);
     glEnable(GL_POINT_SMOOTH);
     glEnable(GL_LINE_SMOOTH);
