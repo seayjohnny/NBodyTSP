@@ -5,6 +5,7 @@ function w3_open() {
  
 function w3_close(p) {
   document.getElementById("mySidebar").style.display = "none";
+  if(p==undefined){ p = 1;}
   i += p;
 }
 
