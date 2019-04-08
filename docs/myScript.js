@@ -12,3 +12,9 @@ function w3_close(p) {
 function goBack() {
     window.history.go(-i);
 }
+
+function onFrameLoad() {
+  var loc = window.location.hash;
+  var element_to_scroll_to = document.getElementById(window.location.hash);
+  element_to_scroll_to.scrollIntoView();
+}

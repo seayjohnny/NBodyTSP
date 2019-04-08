@@ -15,6 +15,8 @@ body { background-color:rgb(230, 230, 235)}
 </style>
 <body>
 
+  <script src="myScript.js"></script>
+  
 <!-- Sidebar (hidden by default) -->
 <nav class="w3-sidebar w3-bar-block w3-card w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:25%;min-width:250px" id="mySidebar">
   <a href="javascript:void(0)" onclick="w3_close()"
@@ -48,7 +50,7 @@ body { background-color:rgb(230, 230, 235)}
   <div class="w3-row-padding w3-padding-32 w3-center">
     <h3>Presentation</h3>
     <div style="position:relative;padding-top:56.25%;">
-      <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQkqZ_R0cL1NamFI1LdV4fe8_ArbhAtQbpaVgaS7M8gzWvzkR1bqcJ5KpucfuB76FlOhou0npgLZsHR/embed?start=false&loop=false&delayms=60000"  frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+      <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQkqZ_R0cL1NamFI1LdV4fe8_ArbhAtQbpaVgaS7M8gzWvzkR1bqcJ5KpucfuB76FlOhou0npgLZsHR/embed?start=false&loop=false&delayms=60000"  frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="position:absolute;top:0;left:0;width:100%;height:100%;" onload="onFrameLoad(this)"></iframe>
     </div>
   </div>
 
@@ -99,16 +101,7 @@ body { background-color:rgb(230, 230, 235)}
 <!-- End page content -->
 </div>
 
-<script>
-// Script to open and close sidebar
-function w3_open() {
-  document.getElementById("mySidebar").style.display = "block";
-}
- 
-function w3_close() {
-  document.getElementById("mySidebar").style.display = "none";
-}
-</script>
+
 
 </body>
 </html>
