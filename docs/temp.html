@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<title>N-Body TSP</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<link rel="stylesheet" href="./responsive.css">
+<link rel="stylesheet" href="./display.css">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
+p { font-size: 14pt}
+.w3-bar-block .w3-bar-item {padding:20px}
+img:hover { cursor: pointer;}
+body { background-color:rgb(230, 230, 235)}
+.w3-top { background-color:rgb(225, 225, 230)}
+</style>
+<body>
+
+<script src="myScript.js"></script>
+  
+<!-- Top menu -->
+<!-- <div class="w3-top">
+  <div class="w3-xlarge" style="margin-left:50px;margin-right:50px">
+    <a class="w3-left w3-button w3-padding-16">Abstract</a>
+    <a class="w3-left w3-button w3-padding-16">Method</a>
+    <a class="w3-left w3-button w3-padding-16">Results</a>
+    <a class="w3-left w3-button w3-padding-16">Presentation</a>
+    <a class="w3-display-middle w3-button w3-padding-16"><b>N-body TSP</b></a>
+    <a class="w3-right w3-button w3-padding-16">Contact</a>
+    <a class="w3-right w3-button w3-padding-16">Github</a>
+    <a class="w3-right w3-button w3-padding-16">Future Work</a>
+    <a class="w3-right w3-button w3-padding-16">Poster</a>
+
+  </div>
+</div> -->
+  
+<!-- Top menu -->
+<div class="top w3-center col-full">
+    <div class="font-xxlarge">
+        <a class="col-ninth w3-button">Abstract</a>
+        <a class="col-ninth w3-button">Method</a>
+        <a class="col-ninth w3-button">Results</a>
+        <a class="col-ninth w3-button">Presentation</a>
+        <a class="col-ninth w3-button"><b>N-Body TSP</b></a>
+        <a class="col-ninth w3-button">Contact</a>
+        <a class="col-ninth w3-button">Github</a>
+        <a class="col-ninth w3-button">Future Work</a>
+        <a class="col-ninth w3-button">Poster</a>
+    </div>
+</div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px" onclick="w3_close(0)">
+
+      <!-- Abstract -->
+  <hr id="abstract">
+  <div class="w3-row-padding w3-padding-32 w3-center">
+  	<h3>Abstract</h3><br>
+    <p>In the Traveling Salesman Problem (TSP), you are generally given a list of cities and the distances between each pair of cities. The goal is to find the shortest possible route that visits each city exactly once and returns to the original city. The TSP has a wide range of applications in many different industries, including (but not limited to) optimizing mail and shipping routes, guiding industrial machines, reducing flight times, and mapping genomes. The problem has been studied informally for centuries, and more formally for decades. The TSP has become one of the most popular problems in the fields of mathematics and computer science. Numerous approximation techniques have been studied, ranging from linear programming methods to nature-inspired models. Here, we present a novel N-body approach to the TSP.</p>
+  </div>
+  
+  <!-- Presentation
+  <hr id="present">
+  <div class="w3-row-padding w3-padding-32 w3-center">
+    <h3>Presentation</h3>
+    <div style="position:relative;padding-top:56.25%;">
+      <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQkqZ_R0cL1NamFI1LdV4fe8_ArbhAtQbpaVgaS7M8gzWvzkR1bqcJ5KpucfuB76FlOhou0npgLZsHR/embed?start=false&loop=false&delayms=60000"  frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="position:absolute;top:0;left:0;width:100%;height:100%;" onload="onFrameLoad(this)"></iframe>
+    </div>
+  </div> -->
+
+  
+  <!-- Runs-->
+  <hr id="runs">
+  <div class="w3-row-padding w3-padding-32 w3-center">
+    <h3>Runs</h3>
+    <p>Click on the images below to view runs for that dataset.</p>
+    <div class="w3-third">
+      <img src="https://seayjohnny.github.io/NBodyTSP/images/att48.png" alt="att48" style="width:100%" onclick="window.location.href = './att48.html';">
+      <h4><i>att48</i></h4>
+      <p>The capitals of the lower 48 contiguous states.</p>
+    </div>
+    <div class="w3-third">
+      <img src="https://seayjohnny.github.io/NBodyTSP/images/bayg29.png" alt="bayg29" style="width:100%" onclick="window.location.href = './bayg29.html';">
+      <h3><i>bayg29</i></h3>
+      <p>29 cities in Bavaria, Germany.</p>
+    </div>
+    <div class="w3-third">
+      <img src="https://seayjohnny.github.io/NBodyTSP/images/ch150.png" alt="ch150" style="width:100%" onclick="window.location.href = './ch150.html';">
+      <h3><i>ch150</i></h3>
+      <p>150 random points.</p>
+    </div>
+  
+  <!-- Footer -->
+  <footer class="w3-row-padding w3-padding-32">
+  </footer>
+
+<!-- End page content -->
+</div>
+
+</body>
+</html>

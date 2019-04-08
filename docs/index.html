@@ -12,10 +12,33 @@ p { font-size: 14pt}
 img:hover { cursor: pointer;}
 body { background-color:rgb(230, 230, 235)}
 .w3-top { background-color:rgb(225, 225, 230)}
+.w3-border{border:2px solid !important}
+hr {height:5px; border: 0; border-top: 2px solid; border-color: rgb(146, 146, 146)}
+.tab-button {
+  border:2px solid black;
+  display:inline-block;
+  padding:8px 16px;
+  vertical-align:middle;
+  overflow:hidden;
+  text-decoration:none;
+  color:inherit;
+  background-color:inherit;
+  text-align:center;
+  cursor:pointer;
+  white-space:nowrap;
+  padding-top:32px!important;
+  padding-bottom:32px!important;
+}
+.tab-button:hover {
+  color: black !important;
+  background-color: #cccccc !important;
+}
+.selected {background-color:lightsteelblue}
+
 </style>
 <body>
 
-  <script src="myScript.js"></script>
+<script src="myScript.js"></script>
   
 <!-- Sidebar (hidden by default) -->
 <nav class="w3-sidebar w3-bar-block w3-card w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:25%;min-width:250px" id="mySidebar">
@@ -31,19 +54,19 @@ body { background-color:rgb(230, 230, 235)}
 <div class="w3-top">
   <div class="w3-xlarge" style="max-width:1200px;margin:auto">
     <div class="w3-button w3-padding-16 w3-left" onclick="w3_open()">☰</div>
-    <div class="w3-center w3-padding-16">N-body TSP</div>
+    <a href="index.html" class="w3-button w3-display-middle w3-padding-16"><b>N-Body TSP</b></a>
   </div>
 </div>
   
 <!-- !PAGE CONTENT! -->
-<div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px" onclick="w3_close()">
+<div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px" onclick="w3_close(0)">
 
   <!-- Abstract -->
-  <hr id="abstract">
+  <!-- <hr id="abstract">
   <div class="w3-row-padding w3-padding-32 w3-center">
   	<h3>Abstract</h3><br>
     <p>In the Traveling Salesman Problem (TSP), you are generally given a list of cities and the distances between each pair of cities. The goal is to find the shortest possible route that visits each city exactly once and returns to the original city. The TSP has a wide range of applications in many different industries, including (but not limited to) optimizing mail and shipping routes, guiding industrial machines, reducing flight times, and mapping genomes. The problem has been studied informally for centuries, and more formally for decades. The TSP has become one of the most popular problems in the fields of mathematics and computer science. Numerous approximation techniques have been studied, ranging from linear programming methods to nature-inspired models. Here, we present a novel N-body approach to the TSP.</p>
-  </div>
+  </div> -->
   
   <!-- Presentation
   <hr id="present">
@@ -54,7 +77,36 @@ body { background-color:rgb(230, 230, 235)}
     </div>
   </div> -->
 
-  
+  <div class="w3-xlarge">
+  <div class="w3-row-padding w3-padding-16 w3-center">
+    <h2><b>Overview</b></h2>
+    <div class="w3-quarter tab-button" onclick="showTab('abstract-body',this)">Abstract</div>
+    <div class="w3-quarter tab-button" onclick="showTab('method-body',this)">Method</div>
+    <div class="w3-quarter tab-button" onclick="showTab('results-body',this)">Results</div>
+    <div class="w3-quarter tab-button" onclick="showTab('future-body',this)">Future Work</div>
+  </div>
+  <div id="abstract-body" class="w3-row-padding w3-padding-16 w3-center tab-body" hidden="true">
+      <p>In the Traveling Salesman Problem (TSP), you are generally given a list of cities and the distances between each pair of cities. The goal is to find the shortest possible route that visits each city exactly once and returns to the original city. The TSP has a wide range of applications in many different industries, including (but not limited to) optimizing mail and shipping routes, guiding industrial machines, reducing flight times, and mapping genomes. The problem has been studied informally for centuries, and more formally for decades. The TSP has become one of the most popular problems in the fields of mathematics and computer science. Numerous approximation techniques have been studied, ranging from linear programming methods to nature-inspired models. Here, we present a novel N-body approach to the TSP.</p>
+  </div>
+  <div id="method-body" class="w3-row-padding w3-padding-16 w3-center tab-body" hidden="true">
+      <p>move-stuff</p>
+  </div>
+  <div id="results-body" class="w3-row-padding w3-padding-16 w3-center tab-body" hidden="true">
+      <p>results-stuff</p>
+  </div>
+  <div id="future-body" class="w3-row-padding w3-padding-16 w3-center tab-body" hidden="true">
+      <p>future-stuff</p>
+  </div>
+
+  <div class="w3-row-padding w3-padding-16 w3-center">
+    <hr>
+    <h2><b>Media</b></h2>
+    <a class="w3-half w3-button w3-padding-32 w3-border w3-border-dark-grey">Presentation</a>
+    <a class="w3-half w3-button w3-padding-32 w3-border w3-border-dark-grey">Poster</a>
+  </div>
+
+</div>
+
   <!-- Runs-->
   <hr id="runs">
   <div class="w3-row-padding w3-padding-32 w3-center">

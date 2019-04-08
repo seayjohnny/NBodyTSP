@@ -1,0 +1,43 @@
+ ol {
+    padding: 0;
+    list-style-type: none;
+    overflow: hidden
+ }
+ 
+ li {
+    float: left;
+    background-color: #cccccc;
+    padding-top: 0;
+    padding-bottom: 0;
+ }
+ 
+ li a {
+    display: block;
+    color: #717171;
+    text-align: center;
+    text-decoration: none;
+    padding: 16px;
+    background-color: inherit;
+ }
+ 
+ li a:hover {
+    background-color: #eeeeee;  
+ }
+ 
+ .nav-container ol {
+    background-color: #cccccc;
+ }
+ 
+ h1 {
+    padding-left: 15px;
+    margin-bottom: 5px;
+ }
+ 
+ h1 a {
+    color: initial;
+ }
+ 
+ p {
+    padding-left: 25px;
+    margin-top: 5px;
+ }

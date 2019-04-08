@@ -1,0 +1,12 @@
+/* Font and Text Classes */
+
+.font-tiny {font-size: 10px !important}
+.font-small {font-size: 12px !important}
+.font-medium {font-size: 18px !important}
+.font-large {font-size: 24px !important}
+.font-xlarge {font-size: 32px !important}
+.font-xxlarge {font-size: 48px !important}
+.font-xxxlarge {font-size: 64px !important}
+.font-jumbo {font-size: 24px !important}
+.font-wide {letter-spacing: 4px}
+.font-serif {font-family: serif}
