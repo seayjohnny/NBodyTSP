@@ -14,13 +14,13 @@
 //TODO : nbodyrender.h
 //TODO : arrmath.h
 
-#define BLOCKS 4
+#define BLOCKS 5
 
 #define DAMP 20.0
 #define MASS 80.0
 
-#define WALL_STRENGTH 5000.0
-#define FORCE_CUTOFF 100.0
+#define WALL_STRENGTH 20000.0
+#define FORCE_CUTOFF 100000.0
 
 #define P_LOWER 3.00000
 #define P_UPPER 11.99999
@@ -30,6 +30,9 @@
 
 #define H_LOWER 0.00001
 #define H_UPPER 10.0000
+
+#define PRES_LOWER 1.0
+#define PRES_UPPER 10.0
 
 #define DR 0.01
 #define DT 0.01
@@ -71,6 +74,7 @@ __global__ void init_rand_state(curandState *state)
 {
     curand_init(1, blockIdx.x, 0, &state[blockIdx.x]);
 }
+
 
 __device__ void nBodyStep(float4* shParams, float2* shPos, float2* shInitPos, float2* pos, float2* vel, float2* acc, float iR, float oR)
 {
@@ -195,10 +199,10 @@ __global__ void nBodyRun(float4* params, double* results, float initOuterRadius)
 
 int main(int argc, char** argv)
 {
-    int n = getNumberOfNodes("./datasets/rand128/coords.txt");
+    int n = getNumberOfNodes("./datasets/att48/coords.txt");
     if(n!=N) return 1;
 
-    loadPos(h_pos, "./datasets/rand128/coords.txt");
+    loadPos(h_pos, "./datasets/att48/coords.txt");
     cudaMemcpyToSymbol(d_pos, h_pos, sizeof(float2)*N);
 
     float4* h_params = (float4*)malloc(sizeof(float4)*BLOCKS);

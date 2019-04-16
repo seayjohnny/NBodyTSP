@@ -13,7 +13,7 @@
 //TODO : arrmath.h
 
 #define BLOCK 256
-#define FORCE_CUTOFF 10000.0
+#define FORCE_CUTOFF 100000.0
 
 #define DRAW 1
 
@@ -241,7 +241,7 @@ void normalizeCircles(RunState* rs)
 
 int main(int argc, char** argv)
 {
-    int n = getNumberOfNodes("./datasets/att48/coords.txt");
+    int n = getNumberOfNodes("./datasets/rand128/coords.txt");
     if(n!=N) return 1;
 
     RunState o_rs;
@@ -252,9 +252,9 @@ int main(int argc, char** argv)
     memset(&o_rs, 0, sizeof(o_rs));
 
     h_rs.numberOfNodes = n;
-    h_rs.m = -0.025;
-    h_rs.p = 8.00;
-    h_rs.q = 14.00;
+    h_rs.m = -0.05;
+    h_rs.p = 9.073103;
+    h_rs.q = 13.695556;
     h_rs.damp = 20.0;
     h_rs.mass = 80.0;
     h_rs.lowerPressureLimit = 1.0;
@@ -278,8 +278,8 @@ int main(int argc, char** argv)
     
     // loadNodes(h_rs.nodes, "./datasets/bay29/coords.txt");
     // loadNodes(o_rs.nodes, "./datasets/bay29/coords.txt");
-    loadNodes(h_rs.nodes, "./datasets/att48/coords.txt");
-    loadNodes(o_rs.nodes, "./datasets/att48/coords.txt");
+    loadNodes(h_rs.nodes, "./datasets/rand128/coords.txt");
+    loadNodes(o_rs.nodes, "./datasets/rand128/coords.txt");
     //loadNodes(h_rs.nodes, "./datasets/rand8/coords.txt");
     //loadNodes(o_rs.nodes, "./datasets/rand8/coords.txt");
     // loadNodes(h_rs.nodes, "./datasets/pres8/coords.txt");
@@ -295,9 +295,9 @@ int main(int argc, char** argv)
     grid.z = 1;
 
     cudaMemcpy(d_rs, &h_rs, sizeof(RunState), cudaMemcpyHostToDevice);
-    getDensity<<<grid, 1>>>(d_rs, 0);
-    initBubbles<<<grid, 1>>>(d_rs);
-    cudaMemcpy(&h_rs, d_rs, sizeof(RunState), cudaMemcpyDeviceToHost);
+    // getDensity<<<grid, 1>>>(d_rs, 0);
+    // initBubbles<<<grid, 1>>>(d_rs);
+    // cudaMemcpy(&h_rs, d_rs, sizeof(RunState), cudaMemcpyDeviceToHost);
     if(DRAW)
     {
         nBodyRenderInit(argc, argv, h_rs);
@@ -328,14 +328,14 @@ int main(int argc, char** argv)
         {
             printf("\r Running n-body extrustion. ☐  %.0f%%", floor(100*innerRadius/outerRadius));
             nBodyStep<<<1,n>>>(d_rs, dt, dr);
-            // adjustForPressure<<<1,1>>>(d_rs);
-            getDensity<<<grid, 1>>>(d_rs, dr);
+            adjustForPressure<<<1,1>>>(d_rs);
+            // getDensity<<<grid, 1>>>(d_rs, dr);
             t += dt;
             if(drawCount == 100 && DRAW)
             {
                 cudaMemcpy(&h_rs, d_rs, sizeof(RunState), cudaMemcpyDeviceToHost); //TODO: Stream this maybe
                 cudaDeviceSynchronize();
-                normalizeNodePositions(h_rs.nodes, n);
+                // normalizeNodePositions(h_rs.nodes, n);
                 normalizeCircles(&h_rs);
                 normalizeNodes(&h_rs);
                 normalizeDensityCenters(&h_rs);

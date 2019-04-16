@@ -34,7 +34,8 @@ hr {height:5px; border: 0; border-top: 2px solid; border-color: rgb(146, 146, 14
   background-color: #cccccc !important;
 }
 .selected {background-color:lightsteelblue}
-
+.ol-left { text-align: left !important }
+.ol-left li {font-size: 18px}
 </style>
 <body>
 
@@ -46,7 +47,7 @@ hr {height:5px; border: 0; border-top: 2px solid; border-color: rgb(146, 146, 14
   class="w3-bar-item w3-button">Close Menu</a>
   <a href="#abstract" onclick="w3_close()" class="w3-bar-item w3-button">Abstract</a>
   <a href="#present" onclick="w3_close()" class="w3-bar-item w3-button">Presentation</a>
-  <a href="#runs" onclick="w3_close()" class="w3-bar-item w3-button">Runs</a>
+  <a href="runs.html" onclick="w3_close()" class="w3-bar-item w3-button">Runs</a>
   <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">About</a>
 </nav>
 
@@ -88,14 +89,21 @@ hr {height:5px; border: 0; border-top: 2px solid; border-color: rgb(146, 146, 14
   <div id="abstract-body" class="w3-row-padding w3-padding-16 w3-center tab-body" hidden="true">
       <p>In the Traveling Salesman Problem (TSP), you are generally given a list of cities and the distances between each pair of cities. The goal is to find the shortest possible route that visits each city exactly once and returns to the original city. The TSP has a wide range of applications in many different industries, including (but not limited to) optimizing mail and shipping routes, guiding industrial machines, reducing flight times, and mapping genomes. The problem has been studied informally for centuries, and more formally for decades. The TSP has become one of the most popular problems in the fields of mathematics and computer science. Numerous approximation techniques have been studied, ranging from linear programming methods to nature-inspired models. Here, we present a novel N-body approach to the TSP.</p>
   </div>
-  <div id="method-body" class="w3-row-padding w3-padding-16 w3-center tab-body" hidden="true">
-      <p>move-stuff</p>
+  <div id="method-body" class="w3-row-padding w3-padding-16 w3-center tab-body font-small" hidden="true">
+        <ol class="ol-left font-tiny">
+          <li>Being an N-body simulation, we let each pair of cities interact with each other through an attractive-repulsive force.</li>
+          <li>Surround the cities with a bounding circle whose center is the centroid of the cities.</li>
+          <li>Insert an additional circle at the centroid of the cities, with an initial radius of zero.</li>
+          <li>Increase the inner circle's radius over time until it reaches the outer circle.</li>
+          <li>The circles act as walls pushing on the cities, so that by the time the inner circle has reached the outer circle, the cities have been pushed into a 1-dimensional ring.</li>
+          <li>Obtain the path from the resulting ring.</li>
+        </ol>
   </div>
   <div id="results-body" class="w3-row-padding w3-padding-16 w3-center tab-body" hidden="true">
-      <p>results-stuff</p>
+      <p>Check out some runs, either below or from the sidebar menu!</p>
   </div>
   <div id="future-body" class="w3-row-padding w3-padding-16 w3-center tab-body" hidden="true">
-      <p>future-stuff</p>
+      <p>In the future, I'd like to perform some hyperparameter optimization in order to find ideal parameters for our simulations. Additionally, I'd like to be able to run multiple simulations simulataneously in parallel on the GPU. In general, I'd like to improve code efficiency. I'd also like to investigate other force functions and moving into higher dimensional spaces.</p>
   </div>
 
   <div class="w3-row-padding w3-padding-16 w3-center">
