@@ -1,1 +1,104 @@
 
+<!DOCTYPE html>
+<html>
+<title>N-Body TSP</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
+p { font-size: 14pt}
+.w3-bar-block .w3-bar-item {padding:20px}
+body { background-color:rgb(230, 230, 235)}
+.w3-top { background-color:rgb(225, 225, 230)}
+</style>
+<body>
+
+<!-- Sidebar (hidden by default) -->
+<nav class="w3-sidebar w3-bar-block w3-card w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:25%;min-width:250px" id="mySidebar">
+    <a href="javascript:void(0)" onclick="w3_close()"
+    class="w3-bar-item w3-button">Close Menu</a>
+    <a href="#basic" onclick="w3_close()" class="w3-bar-item w3-button">Basic</a>
+    <a href="#pressure" onclick="w3_close()" class="w3-bar-item w3-button">Pressure</a>
+    <a href="#density" onclick="w3_close()" class="w3-bar-item w3-button">Density</a>
+    <a onclick="goBack()" class="w3-bar-item w3-button">Go Back</a>
+  </nav>
+
+<!-- Top menu -->
+<div class="w3-top">
+  <div class="w3-xlarge" style="max-width:1200px;margin:auto">
+    <div class="w3-button w3-padding-16 w3-left" onclick="w3_open()">☰</div>
+    <div class="w3-center w3-padding-16">N-body TSP: <i>ch150</i> Runs</div>
+  </div>
+</div>
+  
+<!-- !PAGE CONTENT! -->
+<div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px" onclick="w3_close(0)">
+
+  <div class="w3-row-padding w3-padding-32 w3-center">
+    <h1>Best Run: Pressure Run<br /></h1>
+    <h2>
+        Optimal Cost: 6532.280<br />
+        N-Body Cost: 8123.636<br />
+        Percent Diff.: <b>24.36%</b>
+    </h2>
+    <br><br>
+    <p>
+      <b><i>NOTE:</i></b>    All videos of runs are in realtime. Videos have not been altered in anyway.
+    </p>
+  </div>
+  <!-- Basic -->
+  <hr id="basic">
+  <div class="w3-row-padding w3-padding-32 w3-center">
+  	<h3>Basic Run</h3><br>
+    <div style="position:relative;padding-top:56.25%;">
+        <iframe src="https://drive.google.com/file/d/11-l9qgVTaiChf2Ilulh7vbhXXX-VZO0g/preview" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+    </div>
+    <p>
+        Optimal Cost: 6532.280<br />
+        N-Body Cost: 8635.197<br />
+        Percent Diff.: <b>32.19%</b>
+    </p>
+  </div>
+
+  <!-- Pressure -->
+  <hr id="pressure">
+  <div class="w3-row-padding w3-padding-32 w3-center">
+  	<h3>Pressure Run</h3><br>
+    <div style="position:relative;padding-top:56.25%;">
+            <iframe src="https://drive.google.com/file/d/15VJ3Frbl_c8VN-R-LbEhxCUHO1UCLvsy/preview" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+    </div>
+    <p>
+        Optimal Cost: 6532.280<br />
+        N-Body Cost: 8123.636<br />
+        Percent Diff.: <b>24.36%</b>
+    </p>
+  </div>
+  
+  <!-- Density -->
+  <hr id="density">
+  <div class="w3-row-padding w3-padding-32 w3-center">
+  	<h3>Density Run</h3><br>
+    <div style="position:relative;padding-top:56.25%;">
+            <iframe src="https://drive.google.com/file/d/1LzJT-hOtJ4VnJepumgAyg70-N2Z3ruaD/preview" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+    </div>
+    <p>
+        Optimal Cost: 6532.280<br />
+        N-Body Cost:  8434.381<br />
+        Percent Diff.: <b>29.11%</b>
+    </p>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w3-row-padding w3-padding-32 w3-center">
+        <a onclick="goBack()" class="w3-bar-item w3-button">Go Back</a>
+  </footer>
+
+<!-- End page content -->
+</div>
+
+<script src="myScript.js"></script>
+
+</body>
+</html>
